@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class DirectionBlock : MonoBehaviour
 {
+
+    public enum Direction{up, down, left, right}
+
+    public Direction theDirection;
+
     // Start is called before the first frame update
     void Start()
     {

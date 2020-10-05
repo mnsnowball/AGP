@@ -7,8 +7,17 @@ public class CameraControl : MonoBehaviour
 
     public GameObject playingCam;
     public GameObject defaultCam;
+
+    GameManager theManager;
+
+    private void Start() {
+        theManager  = GameObject.FindObjectOfType<GameManager>();
+
+        defaultCam.SetActive(true);
+        playingCam.SetActive(false);
+    }
     private void Update() {
-        GameManager theManager  = GameObject.FindObjectOfType<GameManager>();
+        
         if (!theManager.isPaused) // if it isn't paused we can assume it's playing
         {
             defaultCam.SetActive(false);

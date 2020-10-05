@@ -1,28 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Array2DEditor;
 
 public class EnvironmentManager : MonoBehaviour
 {
-    public int labXSize;
-    public int labYSize;
+    [SerializeField]
+    private Array2DBool array2DBool;
+    bool[,] cells;
 
-    // holds data regarding whether any given spot in the wizard lab is traversable
-    // used by the player controller to determine if the player can move in a direction
-    public List<List<bool>> wizardLab;
-
-    // the layout of the level the player is giving directions for
-    // used by the timeLine script when executing the directions the player gave
-    List<List<bool>> directionEnvironment;
     // Start is called before the first frame update
     void Start()
     {
-        
+        cells = array2DBool.GetCells();
+        //Debug.Log("x size is " + array2DBool.GridSize.x + " and y size is " + array2DBool.GridSize.y);
+        //Debug.Log("x size is " + cells.GetLength(0) + " and y size is " + cells.GetLength(1));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    // checks if a space is occupied and returns the result
+    public bool IsOccupied(int x, int y){
+        return cells[x, y];
     }
+
+
+    // sets the bool at coordinate [x, y] 
+    public void SetOccupied(int x, int y, bool toSet){
+        cells[x, y] = toSet;
+
+    }
+
+
 }

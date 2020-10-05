@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-
+        isPaused = false;
 
         //timelines = GameObject.FindObjectsOfType(typeof(Timeline)) as Timeline[];
         //timeBlocks[0].StartPlayingBlock();
