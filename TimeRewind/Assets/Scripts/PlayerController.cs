@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-        MovePlayer();
+        //MovePlayer();
 
         //float distToBlock = Vector3.Distance(transform.position, actionBlock.transform.position);
         //bool isInRange = distToBlock < pickUpDist;
