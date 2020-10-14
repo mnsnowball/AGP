@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         isPaused = false;
+        canPause = true;
         Time.timeScale = 1;
     }
 

@@ -29,7 +29,7 @@ public class PlayerControl : MonoBehaviour
         {
             input.x = Input.GetAxisRaw("Horizontal");
             input.z = Input.GetAxisRaw("Vertical");
-            interactButton = Input.GetKey(KeyCode.Space);
+            interactButton = Input.GetKey(KeyCode.Space); // is the player pressing space as well?
 
             // makes it so you can't move diagonally
             if (input.x != 0)
@@ -39,15 +39,15 @@ public class PlayerControl : MonoBehaviour
 
             if (input != Vector3.zero)
             {
-                var targetPos = transform.position;
+                Vector3 targetPos = transform.position;
                 targetPos.x += input.x;
                 targetPos.z += input.z;
 
                 int targetX = xPosition;
                 int targetY = yPosition;
 
-                int blockTargetX = 0;
-                int blockTargetY = 0;
+                int blockTargetX = xPosition;
+                int blockTargetY = yPosition;
                 // check the target position
                 // to get x-coordinate, check input
                 if (input.x > 0) // going to the right
@@ -56,8 +56,22 @@ public class PlayerControl : MonoBehaviour
                     targetX = xPosition + 1;
 
                     //if there's a block there, check the next one to the right
+                    if (environmentManager.HasBlock(targetY, targetX))
+                    {
                         //if that one has a block or an obstacle, don't do anything
-                    // if there's not a block there it's fine, proceed as normal
+                        if (environmentManager.HasBlock(targetY, targetX + 1) || environmentManager.IsOccupied(targetY, targetX + 1))
+                        {
+                            Debug.Log("Block or obstacle found going right, not moving and returning instead...");
+                            return;
+                        } else {// if there's not a block at the next one, we can move but also move the block to the right
+                            // move block to the right
+                            Debug.Log("Block found going right, should move it right");
+                            // set the block's current position to false
+                            // set the block's next position to true
+                            
+                        }
+                        
+                    }
                     
                 } else if (input.x < 0) // going to the left
                 {
@@ -65,8 +79,22 @@ public class PlayerControl : MonoBehaviour
                     targetX = xPosition - 1;
 
                     //if there's a block there, check the next one to the left
+                    if (environmentManager.HasBlock(targetY, targetX))
+                    {
                         //if that one has a block or an obstacle, don't do anything
-                    // if there's not a block there it's fine, proceed as normal
+                        if (environmentManager.HasBlock(targetY, targetX - 1) || environmentManager.IsOccupied(targetY, targetX - 1))
+                        {
+                            Debug.Log("Block or obstacle found going left, not moving and returning instead...");
+                            return;
+                        } else {// if there's not a block at the next one, we can move but also move the block to the left
+                            // move block to the left
+                            Debug.Log("Block found going left, should move it left");
+                            // set the block's current position to false
+                            // set the block's next position to true
+                            
+                        }
+                        
+                    }
                 }
 
                 if (input.z > 0) // going up
@@ -75,8 +103,22 @@ public class PlayerControl : MonoBehaviour
                     targetY = yPosition - 1;
 
                     //if there's a block there, check the next one up
+                    if (environmentManager.HasBlock(targetY, targetX))
+                    {
                         //if that one has a block or an obstacle, don't do anything
-                    // if there's not a block there it's fine, proceed as normal
+                        if (environmentManager.HasBlock(targetY + 1, targetX) || environmentManager.IsOccupied(targetY + 1, targetX))
+                        {
+                            Debug.Log("Block or obstacle found going up, not moving and returning instead...");
+                            return;
+                        } else {// if there's not a block at the next one, we can move but also move the block up one
+                            // move block one up
+                            Debug.Log("Block found going up, should move it up");
+                            // set the block's current position to false
+                            // set the block's next position to true
+                            
+                        }
+                        
+                    }
                     
                 } else if (input.z < 0) // going down
                 {
@@ -84,8 +126,21 @@ public class PlayerControl : MonoBehaviour
                     targetY = yPosition + 1;
 
                     //if there's a block there, check the next one down
+                    if (environmentManager.HasBlock(targetY, targetX))
+                    {
                         //if that one has a block or an obstacle, don't do anything
-                    // if there's not a block there it's fine, proceed as normal
+                        if (environmentManager.HasBlock(targetY - 1, targetX) || environmentManager.IsOccupied(targetY - 1, targetX))
+                        {
+                            Debug.Log("Block or obstacle found going down, not moving and returning instead...");
+                            return;
+                        } else {// if there's not a block at the next one, we can move but also move the block one down
+                            // move block one down
+                            Debug.Log("Block found going down, should move it down");
+                            // set the block's current position to false
+                            // set the block's next position to true
+                        }
+                        
+                    }
                 }
 
                 // if it's not occupied, set the current to not occupied and the next to occupied, and then move

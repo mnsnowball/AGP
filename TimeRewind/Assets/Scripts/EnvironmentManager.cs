@@ -12,6 +12,8 @@ public class EnvironmentManager : MonoBehaviour
     bool[,] obstacleCells;
     bool[,] blockCells;
 
+    private DirectionBlock[,] directionBlocks;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +28,7 @@ public class EnvironmentManager : MonoBehaviour
         return obstacleCells[x, y];
     }
 
-    public bool hasBlock(int x, int y){
+    public bool HasBlock(int x, int y){
         return blockCells[x, y];
     }
 
