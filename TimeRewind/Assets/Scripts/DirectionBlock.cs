@@ -14,6 +14,9 @@ public class DirectionBlock : MonoBehaviour
 
     private bool isMoving;
 
+    float xPosition; // the x position on the blocks grid
+    float yPosition; // the y position on the blocks grid
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,5 +40,9 @@ public class DirectionBlock : MonoBehaviour
 
         transform.position = targetPos;
         isMoving = false;
+    }
+
+    public void MoveToken(){
+        
     }
 }

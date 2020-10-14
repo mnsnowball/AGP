@@ -1,31 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 public class CameraControl : MonoBehaviour
 {
 
-    public GameObject playingCam;
-    public GameObject defaultCam;
+    public CinemachineVirtualCamera pausedCam; // the paused camera
+    public CinemachineVirtualCamera defaultCam; // the gameplay cam
 
     GameManager theManager;
 
     private void Start() {
         theManager  = GameObject.FindObjectOfType<GameManager>();
-
-        defaultCam.SetActive(true);
-        playingCam.SetActive(false);
+        
+        pausedCam.gameObject.SetActive(false);
+        defaultCam.gameObject.SetActive(true);
+        
     }
     private void Update() {
         
-        if (!theManager.isPaused) // if it isn't paused we can assume it's playing
+        if (!theManager.isPaused && pausedCam.gameObject.activeSelf) // if it isn't paused  and the paused camera is active, unpause
         {
-            defaultCam.SetActive(false);
-            playingCam.SetActive(true);
-        } else //it's paused so set default cam to active
+            defaultCam.gameObject.SetActive(true);
+            pausedCam.gameObject.SetActive(false);
+            //Debug.Log("Changing to unpause");
+        }
+        if (theManager.isPaused && !pausedCam.gameObject.activeSelf) // if it's paused and the pause cam isn't active
         {
-            defaultCam.SetActive(true);
-            playingCam.SetActive(false);
+            pausedCam.gameObject.SetActive(true);
+            defaultCam.gameObject.SetActive(false);
+            //Debug.Log("Changing to pause");
         }
     }
 }

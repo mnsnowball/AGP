@@ -11,11 +11,12 @@ public class GameManager : MonoBehaviour
     public Slider progressBar;
 
 
-    Timeline[] timelines;
     public bool isPaused;
+    bool canPause;
     //public TimeBlock[] timeBlocks;
     public int currentTimeIndex = 0;
     public GameObject levelCompletePanel;
+    public GameObject pausePanel;
     List<AsyncOperation> scenesLoading;
 
     // Start is called before the first frame update
@@ -23,20 +24,22 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         isPaused = false;
-
-        //timelines = GameObject.FindObjectsOfType(typeof(Timeline)) as Timeline[];
-        //timeBlocks[0].StartPlayingBlock();
-        //DisableObject(levelCompletePanel);
-        //Time.timeScale = 1;
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (timeBlocks[timeBlocks.Length - 1].hasFinished)
-        //{
-            //isPaused = true;
-        //}
+        if (Input.GetKeyDown(KeyCode.Escape) && canPause)
+        {
+            canPause = false;
+            SetPause(!isPaused);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            canPause = true;
+        }
     }
 
 
@@ -84,44 +87,8 @@ public class GameManager : MonoBehaviour
 
     public void SetPause(bool toSet){
         isPaused = toSet;
+        pausePanel.SetActive(isPaused);
     }
-
-
-    /*void UpdateTimelines(bool timeChanged){
-        for(int i = 0; i < timelines.Length; i++){
-            if(!timelines[i].goalReached){
-                timelines[i].HandleGoals(timeChanged);
-            }            
-        }
-    }*/
-
-    /*public void IncrementTimeBlock(){
-        if(currentTimeIndex < timeBlocks.Length - 1){ // if we're not at the end of time then move on to the next block
-            currentTimeIndex++;
-            timeBlocks[currentTimeIndex].StartPlayingBlock();
-        } 
-    }*/
-
-    /*public void DecrementTimeBlock(){
-        if(currentTimeIndex > 0){ // if we're not at the end of time then move on to the next block
-            currentTimeIndex--;
-            timeBlocks[currentTimeIndex].StartPlayingBlock();
-        } 
-    }
-
-    // resets the scene without needing to load it again
-    public void ResetBlocks(){
-        for (int i = 0; i < timeBlocks.Length; i++)
-        {
-            timeBlocks[i].ResetBlock();
-        }
-        for (int i = 0; i < timelines.Length; i++)
-        {
-            timelines[i].ResetSelf();
-        }
-        isPaused = true;
-        currentTimeIndex = 0;
-    }*/
     
     // enables UI to say the level is complete and sets time scale to zero
     public void LevelComplete(){
