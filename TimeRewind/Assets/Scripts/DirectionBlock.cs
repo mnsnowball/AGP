@@ -14,8 +14,8 @@ public class DirectionBlock : MonoBehaviour
 
     private bool isMoving;
 
-    float xPosition; // the x position on the blocks grid
-    float yPosition; // the y position on the blocks grid
+    public int xPosition; // the x position on the blocks grid
+    public int yPosition; // the y position on the blocks grid
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +42,23 @@ public class DirectionBlock : MonoBehaviour
         isMoving = false;
     }
 
-    public void MoveToken(){
-        
+    public void MoveToken(Vector3 targetPos){
+        StartCoroutine(Move(targetPos));
+    }
+
+    public void IncrementX(){
+        xPosition++;
+    }
+
+    public void IncrementY(){
+        yPosition++;
+    }
+
+    public void DecrementX(){
+        xPosition--;
+    }
+
+    public void DecrementY(){
+        yPosition--;
     }
 }

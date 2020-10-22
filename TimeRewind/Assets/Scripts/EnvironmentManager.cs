@@ -12,15 +12,14 @@ public class EnvironmentManager : MonoBehaviour
     bool[,] obstacleCells;
     bool[,] blockCells;
 
-    private DirectionBlock[,] directionBlocks;
+    public List<DirectionBlock> directionBlocks; // will check the indices of these against those passed in
+    public float moveIncrement = 1;
 
     // Start is called before the first frame update
     void Start()
     {
         obstacleCells = obstacles.GetCells();
         blockCells = blocks.GetCells();
-        //Debug.Log("x size is " + array2DBool.GridSize.x + " and y size is " + array2DBool.GridSize.y);
-        //Debug.Log("x size is " + cells.GetLength(0) + " and y size is " + cells.GetLength(1));
     }
 
     // checks if a space is occupied and returns the result
@@ -36,11 +35,83 @@ public class EnvironmentManager : MonoBehaviour
     // sets the bool at coordinate [x, y] 
     public void SetOccupied(int x, int y, bool toSet){
         obstacleCells[x, y] = toSet;
-
     }
 
-    public bool getBlock(int x, int y){
-        return blockCells[x, y];
+    public void SetBlock(int x, int y, bool toSet){
+        blockCells[x, y] = toSet;
+    }
+
+    public void MoveBlock(int currentY, int currentX, int targetY, int targetX){
+        DirectionBlock toMove = null;
+        // find the block whose indices match currentY and currentX
+        for (int i = 0; i < directionBlocks.Count; i++)
+        {
+            if (directionBlocks[i].yPosition == currentY && directionBlocks[i].xPosition == currentX)
+            {
+                toMove = directionBlocks[i];
+                Debug.Log("Found correct block!");
+            }
+        }
+        if (toMove == null)
+        {
+            Debug.LogError("Unable to find block");
+        } else { // we have access to the block we need to move
+            // if currentY != targetY we're moving vertically
+            if (currentY != targetY)
+            {
+                // if targetY is less, move up one
+                if (targetY < currentY)
+                {
+                    toMove.MoveToken(new Vector3(toMove.gameObject.transform.position.x, toMove.gameObject.transform.position.y, toMove.gameObject.transform.position.z + moveIncrement));
+                    // fix indices
+                    //increment y
+                    toMove.DecrementY();
+                    //blockCells[currentY, currentX] = false;
+                    SetBlock(currentY, currentX, false);
+                    //blockCells[targetY, targetX] = true;
+                    SetBlock(targetY, targetX, true);
+                } else // if it's less, move down one
+                {
+                    toMove.MoveToken(new Vector3(toMove.gameObject.transform.position.x, toMove.gameObject.transform.position.y, toMove.gameObject.transform.position.z - moveIncrement));
+                    // fix indices
+                    // decrement Y
+                    toMove.IncrementY();
+                    //blockCells[currentY, currentX] = false;
+                    SetBlock(currentY, currentX, false);
+                    //blockCells[targetY, targetX] = true;
+                    SetBlock(targetY, targetX, true);
+                }
+                
+            } else if (currentX != targetX) // moving vertically
+            {
+                // if targetX is greater, move to the right
+                if (targetX > currentX)
+                {
+                    toMove.MoveToken(new Vector3(toMove.gameObject.transform.position.x + moveIncrement, toMove.gameObject.transform.position.y, toMove.gameObject.transform.position.z));
+                    // fix indices
+                    // increment x
+                    toMove.IncrementX();
+                    //blockCells[currentY, currentX] = false;
+                    SetBlock(currentY, currentX, false);
+                    //blockCells[targetY, targetX] = true;
+                    SetBlock(targetY, targetX, true);
+                } else // if it's less, move to the left
+                {
+                    toMove.MoveToken(new Vector3(toMove.gameObject.transform.position.x - moveIncrement, toMove.gameObject.transform.position.y, toMove.gameObject.transform.position.z));
+                    // fix indices
+                    // decrement x
+                    toMove.DecrementX();
+                    //blockCells[currentY, currentX] = false;
+                    SetBlock(currentY, currentX, false);
+                    //blockCells[targetY, targetX] = true;
+                    SetBlock(targetY, targetX, true);
+                }
+            } else // else debug.Error because we shouldn't get here
+            {
+                Debug.LogError("currentY and currentX = targetY and targetX, this function should not have been called");
+            }
+        
+        }
     }
 
 }
