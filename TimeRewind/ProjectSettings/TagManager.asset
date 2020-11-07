@@ -6,8 +6,7 @@ TagManager:
   tags:
   - GameManager
   - blockSpot
-  - Harry
-  - Bus
+  - DirectionBlock
   layers:
   - Default
   - TransparentFX

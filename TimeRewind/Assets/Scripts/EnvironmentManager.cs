@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Array2DEditor;
 
+
 public class EnvironmentManager : MonoBehaviour
 {
     [SerializeField]
@@ -41,6 +42,7 @@ public class EnvironmentManager : MonoBehaviour
         blockCells[x, y] = toSet;
     }
 
+    // this function finds the direction with the indices currentX and currentY and moves it to indices of targetX and targetY
     public void MoveBlock(int currentY, int currentX, int targetY, int targetX){
         DirectionBlock toMove = null;
         // find the block whose indices match currentY and currentX
@@ -49,7 +51,7 @@ public class EnvironmentManager : MonoBehaviour
             if (directionBlocks[i].yPosition == currentY && directionBlocks[i].xPosition == currentX)
             {
                 toMove = directionBlocks[i];
-                Debug.Log("Found correct block!");
+                //Debug.Log("Found correct block!");
             }
         }
         if (toMove == null)

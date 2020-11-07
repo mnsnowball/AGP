@@ -17,18 +17,6 @@ public class DirectionBlock : MonoBehaviour
     public int xPosition; // the x position on the blocks grid
     public int yPosition; // the y position on the blocks grid
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public IEnumerator Move(Vector3 targetPos){
         isMoving = true;
 
