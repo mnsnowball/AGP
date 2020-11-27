@@ -21,6 +21,7 @@ public class PlayerControl : MonoBehaviour
     bool isRotating;
     public MoveState moveState;
     public KeyCode interactKey;
+    public KeyCode castKey = KeyCode.F;
 
     float inputBuffer = 0.5f; // number of seconds to wait before accepting another input
     public float moveIncrement = 1f;

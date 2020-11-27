@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
 
     public bool isPaused;
+    public bool isPlaying;
+    public BlockReader reader;
     bool canPause;
     //public TimeBlock[] timeBlocks;
     public int currentTimeIndex = 0;
@@ -40,6 +42,12 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             canPause = true;
+        }
+
+        if (Input.GetKey(KeyCode.P) && !isPlaying)
+        {
+            isPlaying = true;
+            reader.Play();
         }
     }
 
@@ -93,6 +101,7 @@ public class GameManager : MonoBehaviour
     
     // enables UI to say the level is complete and sets time scale to zero
     public void LevelComplete(){
+        Debug.Log("Level complete!");
         EnableObject(levelCompletePanel);
         //Time.timeScale = 0;
     }

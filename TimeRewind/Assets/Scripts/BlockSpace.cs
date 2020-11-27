@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class BlockSpace : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public BlockReader reader;
+    public int readerIndex; // my position in the space array
+    public DirectionBlock blockHeld;
+    public bool hasBlock = false;
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.tag == "DirectionBlock")// if a direction block hits me, it's my direction block
+        {
+            blockHeld = other.gameObject.GetComponent<DirectionBlock>();
+            hasBlock = true;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void OnTriggerExit(Collider other) {
+        if (other.gameObject.tag == "DirectionBlock")// if a direction block leaves me, I don't have one anymore
+        {
+            blockHeld = null;
+            hasBlock = false;
+        }
     }
 }

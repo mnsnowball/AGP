@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class BlockReader : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+    public BlockSpace[] spaces;
+    public int numberOfSpaces;
+    public Client theClient;
+
+    private void Start() {
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void Play(){
+        Debug.Log("Playing");
+        for (int i = 0; i < spaces.Length; i++)
+        {
+            if (spaces[i].hasBlock)
+            {
+                theClient.AddDirection(spaces[i].blockHeld.direction);
+            }
+        }
+
     }
 }

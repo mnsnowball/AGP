@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+public enum Direction{up, down, left, right}
 public class DirectionBlock : MonoBehaviour
 {
 
-    public enum Direction{up, down, left, right}
+    int numberOfIterations = 1;
+    int currentIteration = 0;
 
-    public Direction theDirection;
+    public Direction direction;
 
     [Header("Movement Settings")]
     public float moveSpeed;

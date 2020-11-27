@@ -24,7 +24,7 @@ public class Sound{
     [HideInInspector]
     public AudioSource source;
     public bool loop;
-    
+    public bool playOnAwake;
 
     public void SetSource(AudioSource _source){
         source = _source;
@@ -47,7 +47,6 @@ public class AudioManager : MonoBehaviour
     public Sound[] sounds;
 
     private void Awake() {
-        DontDestroyOnLoad(gameObject);
         if (instance == null)
         {
             instance = this;
@@ -66,6 +65,10 @@ public class AudioManager : MonoBehaviour
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
+            if (s.playOnAwake)
+            {
+                s.Play();
+            }
         }
     }
 

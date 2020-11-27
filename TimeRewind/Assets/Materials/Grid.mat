@@ -83,7 +83,7 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 0
     m_Colors:
-    - Color_B544DC5F: {r: 0.345098, g: 0.09215686, b: 0.5, a: 0}
+    - Color_B544DC5F: {r: 0.345098, g: 0.09215686, b: 0.5, a: 0.99215686}
     - Vector2_12FC5FE5: {r: 0.5, g: 0.5, b: 0, a: 0}
     - Vector2_EDF2D76B: {r: 5, g: 5, b: 0, a: 0}
     - _BaseColor: {r: 0.509434, g: 0.509434, b: 0.509434, a: 0.87058824}
