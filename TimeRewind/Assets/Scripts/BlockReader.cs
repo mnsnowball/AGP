@@ -7,6 +7,8 @@ public class BlockReader : MonoBehaviour
     public BlockSpace[] spaces;
     public int numberOfSpaces;
     public Client theClient;
+    bool hasFoundJumpBlock = false;
+    bool hasFoundJumpTo = false;
 
     private void Start() {
         
@@ -18,9 +20,21 @@ public class BlockReader : MonoBehaviour
         {
             if (spaces[i].hasBlock)
             {
-                theClient.AddDirection(spaces[i].blockHeld.direction);
+                if (spaces[i].blockHeld.isJumpTo)
+                {
+                    hasFoundJumpTo = true;
+                }
+                if (spaces[i].blockHeld.direction == Direction.jump)
+                {
+                    hasFoundJumpBlock = true;
+                }
+                for (int k = 0; k < spaces[i].blockHeld.numberOfIterations; k++)
+                {
+                    theClient.AddDirection(spaces[i].blockHeld.direction);
+                }
             }
         }
+        theClient.hasFinished = true;
 
     }
 }

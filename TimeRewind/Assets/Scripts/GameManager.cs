@@ -13,10 +13,12 @@ public class GameManager : MonoBehaviour
 
     public bool isPaused;
     public bool isPlaying;
+    public float playDelay = 0.75f;
     public BlockReader reader;
     bool canPause;
     //public TimeBlock[] timeBlocks;
     public int currentTimeIndex = 0;
+    public bool isLevelComplete = false;
     public GameObject levelCompletePanel;
     public GameObject pausePanel;
     List<AsyncOperation> scenesLoading;
@@ -47,7 +49,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKey(KeyCode.P) && !isPlaying)
         {
             isPlaying = true;
-            reader.Play();
+            Invoke("PlayScene", playDelay);
         }
     }
 
@@ -102,6 +104,7 @@ public class GameManager : MonoBehaviour
     // enables UI to say the level is complete and sets time scale to zero
     public void LevelComplete(){
         Debug.Log("Level complete!");
+        isLevelComplete = true;
         EnableObject(levelCompletePanel);
         //Time.timeScale = 0;
     }
@@ -119,5 +122,9 @@ public class GameManager : MonoBehaviour
     // runs the LevelComplete function after toWait seconds
     public void WaitThenLevelComplete(float toWait){
         Invoke("LevelComplete", toWait);
+    }
+
+    void PlayScene(){
+        reader.Play();
     }
 }

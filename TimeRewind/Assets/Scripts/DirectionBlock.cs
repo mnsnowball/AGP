@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum Direction{up, down, left, right}
+using TMPro;
+public enum Direction{up, down, left, right, jump, wait}
 public class DirectionBlock : MonoBehaviour
 {
 
-    int numberOfIterations = 1;
-    int currentIteration = 0;
-
+    public int numberOfIterations = 1;
+    public int currentIteration = 0;
+    public TextMeshProUGUI iterationText;
     public Direction direction;
+    public bool isJumpTo = false;
 
     [Header("Movement Settings")]
     public float moveSpeed;
@@ -49,5 +51,24 @@ public class DirectionBlock : MonoBehaviour
 
     public void DecrementY(){
         yPosition--;
+    }
+
+    public void AddIterations(){
+        numberOfIterations++;
+        UpdateText();
+    }
+
+    public void ResetIterations(){
+        numberOfIterations = 0;
+        UpdateText();
+    }
+
+    public void DecrementIterations(){
+        numberOfIterations--;
+        UpdateText();
+    }
+
+    void UpdateText(){
+        iterationText.text = "x" + numberOfIterations.ToString();
     }
 }

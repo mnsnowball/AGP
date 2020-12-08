@@ -29,6 +29,7 @@ public class EnvironmentManager : MonoBehaviour
     }
 
     public bool HasBlock(int x, int y){
+        //Debug.Log("The block at " + x + ", " + y + " is " + blockCells[x, y]);
         return blockCells[x, y];
     }
 
@@ -114,6 +115,20 @@ public class EnvironmentManager : MonoBehaviour
             }
         
         }
+    }
+
+    // returns a reference to the direction block at a specified environment coordinate
+    public DirectionBlock GetBlock(int x, int y){
+        Debug.Log("Getting blocks at [" + x + ", " + y + "]");
+        DirectionBlock theBlock = null;
+        for (int i = 0; i < directionBlocks.Count; i++)
+        {
+            if (directionBlocks[i].yPosition == x && directionBlocks[i].xPosition == y)
+            {
+                theBlock = directionBlocks[i];
+            }
+        }
+        return theBlock;
     }
 
 }

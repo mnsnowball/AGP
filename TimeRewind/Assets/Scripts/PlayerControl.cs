@@ -9,28 +9,37 @@ public class PlayerControl : MonoBehaviour
     [Header("Movement Settings")]
     public float moveSpeed;
     public float rotationSpeed = 5f;
+    public RotationState rotationState;
+    public MoveState moveState;
+    public float moveIncrement = 1f;
+    
     private bool isMoving;
+    private bool isRotating;
     private Vector3 input;
     private bool interactButton;
 
+    [Header("Environment Settings")]
     public EnvironmentManager environmentManager; // assumes the player starts at [1,1] in the array
+    public int startingXPos = 1;
+    public int startingYPos = 1;
     int xPosition;
     int yPosition;
 
-    public RotationState rotationState;
-    bool isRotating;
-    public MoveState moveState;
+    
+
+    [Header("Interactivity Settings")]
     public KeyCode interactKey;
     public KeyCode castKey = KeyCode.F;
+    bool canCast = true;
+    bool isCasting = false;
 
-    float inputBuffer = 0.5f; // number of seconds to wait before accepting another input
-    public float moveIncrement = 1f;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-       xPosition = 1;
-       yPosition = 1;
+       xPosition = startingXPos;
+       yPosition = startingYPos;
        moveState = MoveState.Idle; 
        isRotating = false;
     }
@@ -39,6 +48,91 @@ public class PlayerControl : MonoBehaviour
     void Update()
     {
         HandleMovement();
+        HandleCasting();
+    }
+
+    void HandleCasting(){
+        
+        if (Input.GetKeyUp(castKey))
+        {
+            canCast = true;
+        }
+        if (Input.GetKey(castKey) && canCast)
+        {
+            Debug.Log("Casting...");
+            canCast = false;
+            switch (rotationState)
+            {
+                case(RotationState.Up): // check the block above me
+                    // if there is a block above me, increase its number of iterations
+                    if (environmentManager.HasBlock(yPosition - 1, xPosition))
+                    {
+                        DirectionBlock theBlock = environmentManager.GetBlock(yPosition - 1, xPosition);
+                        if (theBlock != null)
+                        {
+                            if (theBlock.direction == Direction.jump) // casting on a jump block
+                            {
+                                if (!isCasting)
+                                {
+                                    isCasting = true;
+                                    // enable line between staff and block
+                                } else {
+                                    isCasting = false;
+                                    // disable line between staff and block
+                                }
+                            } else if (isCasting) // if it's not a jump block but I'm casting, make it a jump to
+                            {
+                                theBlock.isJumpTo = true;
+                                // give the jump block a reference to the direction block
+                            } else{ // it's not a jump block and I'm not casting, so just add iterations
+                                theBlock.AddIterations();
+                            }
+                            
+                        }
+                    }
+                break;
+
+                case(RotationState.Down):
+                    // if there is a block below me, increase its number of iterations
+                    if (environmentManager.HasBlock(yPosition + 1, xPosition))
+                    {
+                        DirectionBlock theBlock = environmentManager.GetBlock(yPosition + 1, xPosition);
+                        if (theBlock != null)
+                        {
+                            theBlock.AddIterations();
+                        }
+                    }
+                break;
+
+                case(RotationState.Left):
+                    // if there is a block above me, increase its number of iterations
+                    if (environmentManager.HasBlock(yPosition, xPosition - 1))
+                    {
+                        DirectionBlock theBlock = environmentManager.GetBlock(yPosition, xPosition - 1);
+                        if (theBlock != null)
+                        {
+                            theBlock.AddIterations();
+                        }
+                    }
+                break;
+
+                case(RotationState.Right):
+                    if (environmentManager.HasBlock(yPosition, xPosition + 1))
+                    {
+                        //Debug.Log("Found block to my right");
+                        DirectionBlock theBlock = environmentManager.GetBlock(yPosition, xPosition + 1);
+                        //Debug.Log("Did I find the block? It's " + theBlock.direction);
+                        if (theBlock != null)
+                        {
+                            theBlock.AddIterations();
+                        }
+                    }
+                break;
+
+                default:
+                break;
+            }
+        }
     }
 
     void HandleMovement(){

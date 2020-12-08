@@ -8,6 +8,7 @@ public class Client : MonoBehaviour
     bool isMoving;
     public float moveIncrement = 1f;
     public float moveSpeed = 5f;
+    public bool hasFinished = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +21,10 @@ public class Client : MonoBehaviour
         if (!isMoving && directions.Count > 0)
         {
             ReadDirection(directions.Dequeue());
+        }
+        if (hasFinished && !isMoving && directions.Count == 0 && !GameManager.instance.isLevelComplete)
+        {
+            Debug.Log("Level Failed");
         }
     }
 
