@@ -119,7 +119,7 @@ public class EnvironmentManager : MonoBehaviour
 
     // returns a reference to the direction block at a specified environment coordinate
     public DirectionBlock GetBlock(int x, int y){
-        Debug.Log("Getting blocks at [" + x + ", " + y + "]");
+        //Debug.Log("Getting blocks at [" + x + ", " + y + "]");
         DirectionBlock theBlock = null;
         for (int i = 0; i < directionBlocks.Count; i++)
         {

@@ -12,6 +12,11 @@ public class DirectionBlock : MonoBehaviour
     public Direction direction;
     public bool isJumpTo = false;
 
+    // these variables should only be used if this block is a jump block
+    public DirectionBlock jumpTo;
+    public bool hasJumpTo;
+
+
     [Header("Movement Settings")]
     public float moveSpeed;
 
@@ -71,4 +76,28 @@ public class DirectionBlock : MonoBehaviour
     void UpdateText(){
         iterationText.text = "x" + numberOfIterations.ToString();
     }
+
+    public void SetJumpTo(DirectionBlock theBlock){
+        jumpTo = theBlock;
+        hasJumpTo = true;
+        theBlock.isJumpTo = true;
+        if (direction != Direction.jump)
+        {
+            Debug.LogWarning("I have a jumpto block when I shouldn't. My direction is: " + direction);
+        }
+    }
+
+    public void RemoveJumpTo(){
+        if(jumpTo != null){
+            Debug.Log("Removing current jump to");
+            jumpTo.isJumpTo = false;
+            jumpTo = null;
+            hasJumpTo = false;
+        }
+        if (direction != Direction.jump)
+        {
+            Debug.LogWarning("I have a jumpto block when I shouldn't. My direction is: " + direction);
+        }
+    }
+
 }

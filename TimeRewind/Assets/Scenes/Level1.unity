@@ -2181,7 +2181,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfIterations: 1
   currentIteration: 0
+  iterationText: {fileID: 0}
   direction: 0
+  isJumpTo: 0
   moveSpeed: 5
   xPosition: 2
   yPosition: 4
@@ -3031,7 +3033,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfIterations: 1
   currentIteration: 0
+  iterationText: {fileID: 0}
   direction: 0
+  isJumpTo: 0
   moveSpeed: 5
   xPosition: 4
   yPosition: 2
@@ -3411,7 +3415,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1038245631}
-  m_LocalRotation: {x: 0.16783616, y: -1.9337469e-11, z: 1.1359476e-10, w: 0.9858149}
+  m_LocalRotation: {x: 0.16783616, y: 0.0000000038773993, z: -5.4977956e-10, w: 0.9858149}
   m_LocalPosition: {x: -2.09, y: 1.8638318, z: -1.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4202,7 +4206,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfIterations: 1
   currentIteration: 0
+  iterationText: {fileID: 0}
   direction: 0
+  isJumpTo: 0
   moveSpeed: 5
   xPosition: 2
   yPosition: 3
@@ -4622,7 +4628,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fb5c20323160642bedf1a223d417c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  master: {fileID: 0}
+  sfx: {fileID: 0}
+  music: {fileID: 0}
+  masterVolume: 0
+  sfxVolume: 0
+  musicVolume: 0
   sounds: []
+  dialogueSounds: []
 --- !u!1 &1360179431
 GameObject:
   m_ObjectHideFlags: 0
@@ -13359,7 +13372,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9738de394c9974f4383e923809376308, type: 2}
+  - {fileID: 2100000, guid: d53a9544f89bc504685ed663ea7fec14, type: 2}
   - {fileID: 2100000, guid: 4a1e81c8575a00a478d603d123319351, type: 2}
   - {fileID: 2100000, guid: d91897c704df214408e2fbc73e2e2f6e, type: 2}
   m_StaticBatchInfo:
