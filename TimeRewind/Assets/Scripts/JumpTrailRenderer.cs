@@ -6,18 +6,15 @@ using UnityEngine;
 public class JumpTrailRenderer : MonoBehaviour
 {
     LineRenderer lineRenderer;
-    public GameObject endPosition;
+    public Transform endPosition;
     public float angle;
     public int resolution = 10;
-    public float velocity = 5f;
     public float maxHeight = 1f;
-
-    float g;
-    float radianAngle;
+    public float minDistance = 0.01f;
+    public float middle = 0.6f;
 
     private void Awake() {
         lineRenderer = GetComponent<LineRenderer>();
-        g = Mathf.Abs(Physics.gravity.y);
     }
 
     // Start is called before the first frame update
@@ -28,7 +25,7 @@ public class JumpTrailRenderer : MonoBehaviour
     
     // populating the line renderer with the appropriate settings
     void RenderArc(){
-        lineRenderer.SetVertexCount(resolution + 1);
+        lineRenderer.positionCount = (resolution + 1);
         lineRenderer.SetPositions(CalculateArcArray());
         // set position 0 to my transform
         // set position [resolution] to goal transform
@@ -36,39 +33,45 @@ public class JumpTrailRenderer : MonoBehaviour
 
     Vector3[] CalculateArcArray(){
         Vector3[] arcArray = new Vector3[resolution + 1];
-        arcArray[0] = this.transform.position;
-        arcArray[resolution] = endPosition.transform.position;
-        float distance = Vector3.Distance(this.transform.position, endPosition.transform.position);
-        angle = CalculateAngle(distance, endPosition.transform.position.y);
-        radianAngle = Mathf.Deg2Rad * angle;
+        Vector3 start = transform.position;
+        Vector3 endBase = endPosition.position;
+        float tipHeight = endBase.y - start.y;
+        endBase.y = start.y;
 
-        //velocity = Mathf.Sqrt((distance * g)/ (Mathf.Sin(2 * radianAngle)));
-        for (int i = 0; i <= resolution; i++)
+        float distance = Vector3.Distance(start, endBase);
+        if (distance < minDistance) {
+            distance = minDistance;
+        }
+        Vector3 direction = (endBase - start) / distance;
+        float a = 0.0f;
+        float b = 0.0f;
+        CalculateParabolaParameters(out a, out b, maxHeight, tipHeight, distance, middle);
+
+        arcArray[0] = start;
+        for (int i = 1; i <= resolution; i++)
         {
-            float t = (float)i / (float)resolution;
-            arcArray[i] = CalculateArcPoint(t, distance);
+            float x = (float)i / (float)resolution * distance;
+            float y = CalculateParabola(a, b, 0.0f, x);
+            arcArray[i] = start + direction * x + Vector3.up * y;
         }
 
         return arcArray;
     }
 
-    float CalculateAngle(float x, float y){
-        float a;
-        a = Mathf.Atan((y/x) + Mathf.Sqrt(((y * y)/(x * x)) + 1) );
-        a = a * Mathf.Rad2Deg;
-        return a;
+    float CalculateParabola(float a, float b, float c, float x) {
+        // parabola equation in standard form
+        return a * x * x + b * x + c;
     }
 
-    Vector3 CalculateArcPoint(float t, float maxDistance){
-        Vector2 groundStartPos = new Vector2(transform.position.x, transform.position.z);
-        Vector2 groundEndPos = new Vector2(endPosition.transform.position.x, endPosition.transform.position.z);
-
-        Vector2 lerp = Vector2.Lerp(groundStartPos, groundEndPos, t);
-
-        float x = lerp.x;
-        float y = (x * Mathf.Tan(radianAngle) - ((g * x * x )/(2 * velocity * velocity * Mathf.Cos(radianAngle)* Mathf.Cos(radianAngle)))) + (Mathf.Lerp(transform.position.y, endPosition.transform.position.y, t));
-        // float y = Mathf.Lerp(transform.position.y, endPosition.transform.position.y, t);
-        float z = lerp.y;
-        return new Vector3(x, y, z);
+    void CalculateParabolaParameters(
+        out float a, // a and b are coefficients of the standard form:
+        out float b, // y = ax² + bx + c where c = 0
+        float h,     // h is the height of the parabola
+        float ht,    // ht is the height of the target (staff tip)
+        float d,     // d is the distance to the target (staff tip)
+        float f)     // f is the fraction of the distance to the vertex
+    {
+        a = (ht - (h / f)) / (d * d * (1.0f - f));
+        b = (h / (f * d)) - a * f * d;
     }
 }
