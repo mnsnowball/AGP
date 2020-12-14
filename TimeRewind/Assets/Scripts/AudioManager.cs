@@ -74,9 +74,9 @@ public class AudioManager : MonoBehaviour
         //XMLManager.ins.LoadPrefs();
         instance = this;
 
-        masterVolume = XMLManager.ins.userPrefs.masterVolume;
-        sfxVolume = XMLManager.ins.userPrefs.sfxVolume;
-        musicVolume = XMLManager.ins.userPrefs.backgroundVolume;
+        //masterVolume = XMLManager.ins.userPrefs.masterVolume;
+        //sfxVolume = XMLManager.ins.userPrefs.sfxVolume;
+        //musicVolume = XMLManager.ins.userPrefs.backgroundVolume;
 
         //master.value = XMLManager.ins.userPrefs.masterVolume;
         //sfx.value = XMLManager.ins.userPrefs.sfxVolume;

@@ -64,21 +64,6 @@ public class PlayerControl : MonoBehaviour
             canCast = false;
             switch (rotationState)
             {
-                /*
-                Yeah! So there would be four cases: one where the jumpTo comes first, 
-                one where the jumpFrom comes first, one where a jumpTo is found but no 
-                jump from, and one where a jumpFrom is found but no jumpTo. In the last 
-                two I'd just want it to skip it and carry on. So it can come before or after. 
-
-                If the jumpFrom comes first, it'd look through the rest of the blocks for a 
-                jumpTo and skip it if it doesn't find one.
-
-                It the jumpTo comes first, it'll make a list of directions and iterate through 
-                the rest until it finds a jumpFrom. If it doesn't find a jumpFrom then it 
-                throws out the list and gets skipped, if it does find one then it adds the 
-                list of directions to the client's queue for n times, with n being the number 
-                of iterations on the jumpFrom
-                */
                 case(RotationState.Up): // check the block above me
                     // if there is a block above me, increase its number of iterations
                     if (environmentManager.HasBlock(yPosition - 1, xPosition))
@@ -323,6 +308,8 @@ public class PlayerControl : MonoBehaviour
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
                                     Debug.Log("Trying to pull but there's a block or obstruction in the way!");
+                                    moveState = MoveState.Idle;
+                                    return;
                                 } else { 
                                     // if not, move myself to the right and move the block to my current position
                                     Debug.Log("Pulling down");
@@ -415,6 +402,8 @@ public class PlayerControl : MonoBehaviour
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
                                     Debug.Log("Trying to pull but there's a block or obstruction in the way!");
+                                    moveState = MoveState.Idle;
+                                    return;
                                 } else { 
                                     // if not, move myself to the right and move the block to my current position
                                     Debug.Log("Pulling to the left!");
@@ -504,6 +493,8 @@ public class PlayerControl : MonoBehaviour
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
                                     Debug.Log("Trying to pull but there's a block or obstruction in the way!");
+                                    moveState = MoveState.Idle;
+                                    return;
                                 } else { 
                                     // if not, move myself to the right and move the block to my current position
                                     Debug.Log("Pulling to the right!");
@@ -544,8 +535,6 @@ public class PlayerControl : MonoBehaviour
                                     // move block to the right
                                     Debug.Log("Block found going right, should move it right");
                                     environmentManager.MoveBlock(targetY, targetX, targetY, targetX + 1);
-                                    // set the block's current position to false
-                                    // set the block's next position to true
                                     
                                 }
                                 

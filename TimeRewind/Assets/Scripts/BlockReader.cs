@@ -7,9 +7,7 @@ public class BlockReader : MonoBehaviour
     public BlockSpace[] spaces;
     public int numberOfSpaces;
     public Client theClient;
-    bool hasFoundJumpBlock = false;
-    bool hasFoundJumpTo = false;
-
+    public List<Direction> jumpDirections;
     private void Start() {
         
     }
@@ -30,7 +28,6 @@ public class BlockReader : MonoBehaviour
         list of directions to the client's queue for n times, with n being the number 
         of iterations on the jumpFrom
         */
-
         Debug.Log("Playing");
         for (int i = 0; i < spaces.Length; i++)
         {
@@ -38,21 +35,68 @@ public class BlockReader : MonoBehaviour
             {
                 if (spaces[i].blockHeld.isJumpTo)
                 {
-                    if (hasFoundJumpBlock)
+                    jumpDirections = new List<Direction>();
+                    bool jumpFound = false;
+                    DirectionBlock jump = null;
+                    Debug.Log("Looking for jump block");
+                    // iterate through the blocks from here and add each one to jumpDirections
+                    for (int j = i; j < spaces.Length; j++)
                     {
-                        
-                    } else{
-                        hasFoundJumpTo = true;
+                        if(spaces[j].hasBlock && spaces[j].blockHeld.direction == Direction.jump && spaces[j].blockHeld.hasJumpTo && spaces[j].blockHeld.jumpTo == spaces[i].blockHeld){
+                            // then break out of the list and add jumpDirections to the client for the number of times that
+                            // the jump block loops
+                            jump = spaces[j].blockHeld;
+                            Debug.Log("Found jump block. Adding direction set.");
+                            jumpFound = true;
+                            for (int k = 0; k < jump.numberOfIterations + 1; i++)
+                            {
+                                theClient.AddDirectionSet(jumpDirections);
+                            }
+                            
+                            spaces[j].blockHeld.hasBeenHandled = true;
+                            i = j;
+                            break;
+                        } else{
+                            if (spaces[j].hasBlock)
+                            {
+                                for (int k = 0; k < spaces[j].blockHeld.numberOfIterations; k++)
+                                {
+                                    Debug.Log("Adding " + spaces[j].blockHeld.direction);
+                                    jumpDirections.Add(spaces[i].blockHeld.direction);
+                                }
+                            }
+                            
+                        }
                     }
                     
-                }
-                if (spaces[i].blockHeld.direction == Direction.jump)
-                {
-                    if (hasFoundJumpTo)
-                    {
-                        
+                    if(!jumpFound){
+                        jumpDirections.Clear();
+                        Debug.LogError("Jump block not found");
                     } else{
-                        hasFoundJumpBlock = true;
+                        continue;
+                    }
+                    // then set i to be the jump block's index
+                    // if you didn't find the jump block then throw an error and 
+                    // complete this one as normal
+                }
+                if (spaces[i].hasBlock && spaces[i].blockHeld.direction == Direction.jump && !spaces[i].blockHeld.hasBeenHandled)
+                {
+                    bool hasFoundJumpTo = false;
+                    // iterate through the list looking for my jumpTo
+                    // if I find it, set i to be the index of it,
+                    // and proceed as normal
+                    for (int j = i; j < spaces.Length; j++)
+                    {
+                        if(spaces[j].hasBlock && spaces[j].blockHeld == spaces[i].blockHeld.jumpTo){
+                            i = j;
+                            hasFoundJumpTo = true;
+                            break;
+                        }
+                    }
+                    if (!hasFoundJumpTo)
+                    {
+                        Debug.LogError("Jump found but not jump to. Continuing");
+                        continue;
                     }
                     
                 }

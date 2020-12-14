@@ -35,11 +35,13 @@ public class Client : MonoBehaviour
     public void AddDirectionSet(List<Direction> toAdd){
         for (int i = 0; i < toAdd.Count; i++)
         {
+            Debug.Log("Adding " + toAdd[i]);
             directions.Enqueue(toAdd[i]);
         }
     }
 
     public void ReadDirection(Direction toRead){
+        Debug.Log("Client: Reading " + toRead);
         Vector3 target = new Vector3(0,0,0);
         switch (toRead)
         {

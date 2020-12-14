@@ -38,9 +38,11 @@ public class JumpTrailRenderer : MonoBehaviour
         Vector3[] arcArray = new Vector3[resolution + 1];
         arcArray[0] = this.transform.position;
         arcArray[resolution] = endPosition.transform.position;
-        radianAngle = Mathf.Deg2Rad * angle;
         float distance = Vector3.Distance(this.transform.position, endPosition.transform.position);
+        angle = CalculateAngle(distance, endPosition.transform.position.y);
+        radianAngle = Mathf.Deg2Rad * angle;
 
+        //velocity = Mathf.Sqrt((distance * g)/ (Mathf.Sin(2 * radianAngle)));
         for (int i = 0; i <= resolution; i++)
         {
             float t = (float)i / (float)resolution;
@@ -50,12 +52,11 @@ public class JumpTrailRenderer : MonoBehaviour
         return arcArray;
     }
 
-    float CalculateAngle(){
-        float xMid = (transform.position.x + endPosition.transform.position.x)/2;
-        float yMid = ((transform.position.y + endPosition.transform.position.y)/2) + maxHeight;
-        float zMid = (transform.position.z + endPosition.transform.position.z)/2;
-        Vector3 midPoint = new Vector3(xMid, yMid, zMid);
-        return Vector3.Angle(this.transform.position, midPoint);
+    float CalculateAngle(float x, float y){
+        float a;
+        a = Mathf.Atan((y/x) + Mathf.Sqrt(((y * y)/(x * x)) + 1) );
+        a = a * Mathf.Rad2Deg;
+        return a;
     }
 
     Vector3 CalculateArcPoint(float t, float maxDistance){

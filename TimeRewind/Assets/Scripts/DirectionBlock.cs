@@ -8,9 +8,11 @@ public class DirectionBlock : MonoBehaviour
 
     public int numberOfIterations = 1;
     public int currentIteration = 0;
+    public int maximumIterations = 5;
     public TextMeshProUGUI iterationText;
     public Direction direction;
     public bool isJumpTo = false;
+    public bool hasBeenHandled = false;
 
     // these variables should only be used if this block is a jump block
     public DirectionBlock jumpTo;
@@ -60,6 +62,10 @@ public class DirectionBlock : MonoBehaviour
 
     public void AddIterations(){
         numberOfIterations++;
+        if (numberOfIterations > maximumIterations)
+        {
+            numberOfIterations = 0;
+        }
         UpdateText();
     }
 
