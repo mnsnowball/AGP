@@ -12,6 +12,7 @@ public class PlayerControl : MonoBehaviour
     public RotationState rotationState;
     public MoveState moveState;
     public float moveIncrement = 1f;
+    bool canMove = true;
     
     private bool isMoving;
     private bool isRotating;
@@ -137,7 +138,7 @@ public class PlayerControl : MonoBehaviour
     }
 
     void HandleMovement(){
-        if (moveState == MoveState.Idle && !isRotating)
+        if (moveState == MoveState.Idle && !isRotating && canMove)
         {
             input.x = Input.GetAxisRaw("Horizontal");
             input.z = Input.GetAxisRaw("Vertical");
@@ -613,5 +614,13 @@ public class PlayerControl : MonoBehaviour
         }
         
         isRotating = false;
+    }
+
+    public void StopMoving(){
+        canMove = false;
+    }
+
+    public void StartMoving(){
+        canMove = true;
     }
 }

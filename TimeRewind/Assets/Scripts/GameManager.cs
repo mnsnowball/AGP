@@ -20,8 +20,12 @@ public class GameManager : MonoBehaviour
     public int currentTimeIndex = 0;
     public bool isLevelComplete = false;
     public GameObject levelCompletePanel;
+    public GameObject levelFailedPanel;
     public GameObject pausePanel;
     List<AsyncOperation> scenesLoading;
+    public PlayerControl playerControl;
+    public bool canPlay = false;
+    bool isLevelFailed;
 
     // Start is called before the first frame update
     void Awake()
@@ -46,7 +50,7 @@ public class GameManager : MonoBehaviour
             canPause = true;
         }
 
-        if (Input.GetKey(KeyCode.P) && !isPlaying)
+        if (Input.GetKey(KeyCode.Space) && !isPlaying && canPlay)
         {
             isPlaying = true;
             Invoke("PlayScene", playDelay);
@@ -109,6 +113,14 @@ public class GameManager : MonoBehaviour
         //Time.timeScale = 0;
     }
 
+    public void LevelFailed(){
+        if (!isLevelFailed)
+        {
+            isLevelFailed = true;
+            levelFailedPanel.SetActive(true);
+        }
+    }
+
     // enables any object passed in
     public void EnableObject(GameObject obj){
         obj.SetActive(true);
@@ -126,5 +138,13 @@ public class GameManager : MonoBehaviour
 
     void PlayScene(){
         reader.Play();
+    }
+
+    public void StopPlayerMoving(){
+        playerControl.StopMoving();
+    }
+
+    public void StartPlayerMoving(){
+        playerControl.StartMoving();
     }
 }

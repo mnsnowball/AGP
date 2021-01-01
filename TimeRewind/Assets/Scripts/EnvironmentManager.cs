@@ -6,21 +6,32 @@ using Array2DEditor;
 
 public class EnvironmentManager : MonoBehaviour
 {
+    public static EnvironmentManager instance;
     [SerializeField]
     private Array2DBool obstacles;
     [SerializeField]
-    private Array2DBool blocks;
-    bool[,] obstacleCells;
-    bool[,] blockCells;
-
+    private Array2DBool blocks;         // makes it easy to edit in inspector
+    [SerializeField]
+    private Array2DBool clientEnv;         // makes it easy to edit in inspector
+    bool[,] obstacleCells;              // interface for all obstacle checks
+    bool[,] blockCells;                 // interfaces with all block checks
+    bool[,] clientCells;                 // interfaces with all client movement checks
+    public bool hasMovedBlock = false; // needed for the tutorial
     public List<DirectionBlock> directionBlocks; // will check the indices of these against those passed in
     public float moveIncrement = 1;
 
+    void Awake(){
+        instance = this;
+        
+        obstacleCells = obstacles.GetCells();
+        blockCells = blocks.GetCells();
+        clientCells = clientEnv.GetCells();
+    }
     // Start is called before the first frame update
     void Start()
     {
-        obstacleCells = obstacles.GetCells();
-        blockCells = blocks.GetCells();
+        
+        
     }
 
     // checks if a space is occupied and returns the result
@@ -31,6 +42,11 @@ public class EnvironmentManager : MonoBehaviour
     public bool HasBlock(int x, int y){
         //Debug.Log("The block at " + x + ", " + y + " is " + blockCells[x, y]);
         return blockCells[x, y];
+    }
+
+    public bool HasClientObstacle(int x, int y){
+        Debug.Log("Getting client at [" + x + ", " + y + "]");
+        return clientCells[x, y];
     }
 
 
@@ -45,6 +61,7 @@ public class EnvironmentManager : MonoBehaviour
 
     // this function finds the direction with the indices currentX and currentY and moves it to indices of targetX and targetY
     public void MoveBlock(int currentY, int currentX, int targetY, int targetX){
+        hasMovedBlock = true;
         DirectionBlock toMove = null;
         // find the block whose indices match currentY and currentX
         for (int i = 0; i < directionBlocks.Count; i++)

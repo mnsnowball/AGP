@@ -9,10 +9,17 @@ public class Client : MonoBehaviour
     public float moveIncrement = 1f;
     public float moveSpeed = 5f;
     public bool hasFinished = false;
+    public int startPosX = 0;
+    public int startPosY = 0;
+    public EnvironmentManager em;
+    int currentXPos = 0;
+    int currentYPos = 0;
     // Start is called before the first frame update
     void Start()
     {
         directions = new Queue<Direction>();
+        currentXPos = startPosX;
+        currentYPos = startPosY;
     }
 
     // Update is called once per frame
@@ -25,6 +32,7 @@ public class Client : MonoBehaviour
         if (hasFinished && !isMoving && directions.Count == 0 && !GameManager.instance.isLevelComplete)
         {
             Debug.Log("Level Failed");
+            GameManager.instance.LevelFailed();
         }
     }
 
@@ -43,29 +51,44 @@ public class Client : MonoBehaviour
     public void ReadDirection(Direction toRead){
         Debug.Log("Client: Reading " + toRead);
         Vector3 target = new Vector3(0,0,0);
+        int targetX = currentXPos;
+        int targetY = currentYPos;
         switch (toRead)
         {
             case(Direction.up):
                 target = new Vector3(0, 0, moveIncrement);
                 target += transform.position;
+                targetY--;
             break;
             case(Direction.down):
                 target = new Vector3(0, 0, -moveIncrement);
                 target += transform.position;
+                targetY++;
             break;
             case(Direction.left):
                 target = new Vector3(-moveIncrement, 0, 0);
                 target += transform.position;
+                targetX--;
             break;
             case(Direction.right):
                 target = new Vector3(moveIncrement, 0, 0);
                 target += transform.position;
+                targetX++;
             break;
             default:
             break;
         }
 
-        StartCoroutine(Move(target));
+        //Debug.Log("Can client go? " + EnvironmentManager.instance.CanClientGo(targetY, targetX));
+        if (!EnvironmentManager.instance.HasClientObstacle(targetY, targetX))
+        {
+            StartCoroutine(Move(target));
+            currentYPos = targetY;
+            currentXPos = targetX;
+        } else {
+            Debug.Log("Client has gotten a direction it can't follow");
+        }
+        
     }
 
     public IEnumerator Move(Vector3 targetPos){

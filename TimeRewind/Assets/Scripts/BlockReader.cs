@@ -13,21 +13,6 @@ public class BlockReader : MonoBehaviour
     }
 
     public void Play(){
-        /*
-        Yeah! So there would be four cases: one where the jumpTo comes first, 
-        one where the jumpFrom comes first, one where a jumpTo is found but no 
-        jump from, and one where a jumpFrom is found but no jumpTo. In the last 
-        two I'd just want it to skip it and carry on. So it can come before or after. 
-
-        If the jumpFrom comes first, it'd look through the rest of the blocks for a 
-        jumpTo and skip it if it doesn't find one.
-
-        It the jumpTo comes first, it'll make a list of directions and iterate through 
-        the rest until it finds a jumpFrom. If it doesn't find a jumpFrom then it 
-        throws out the list and gets skipped, if it does find one then it adds the 
-        list of directions to the client's queue for n times, with n being the number 
-        of iterations on the jumpFrom
-        */
         Debug.Log("Playing");
         for (int i = 0; i < spaces.Length; i++)
         {
@@ -42,27 +27,28 @@ public class BlockReader : MonoBehaviour
                     // iterate through the blocks from here and add each one to jumpDirections
                     for (int j = i; j < spaces.Length; j++)
                     {
-                        if(spaces[j].hasBlock && spaces[j].blockHeld.direction == Direction.jump && spaces[j].blockHeld.hasJumpTo && spaces[j].blockHeld.jumpTo == spaces[i].blockHeld){
+                        BlockSpace currentSpace = spaces[j];
+                        if(currentSpace.hasBlock && currentSpace.blockHeld.direction == Direction.jump && currentSpace.blockHeld.hasJumpTo && currentSpace.blockHeld.jumpTo == spaces[i].blockHeld){
                             // then break out of the list and add jumpDirections to the client for the number of times that
                             // the jump block loops
-                            jump = spaces[j].blockHeld;
+                            jump = currentSpace.blockHeld;
                             Debug.Log("Found jump block. Adding direction set.");
                             jumpFound = true;
-                            for (int k = 0; k < jump.numberOfIterations + 1; i++)
+                            for (int k = 0; k < jump.numberOfIterations + 1; k++)
                             {
                                 theClient.AddDirectionSet(jumpDirections);
                             }
                             
-                            spaces[j].blockHeld.hasBeenHandled = true;
-                            i = j;
+                            currentSpace.blockHeld.hasBeenHandled = true;
+                            i = j; // skips the jump block
                             break;
                         } else{
-                            if (spaces[j].hasBlock)
+                            if (currentSpace.hasBlock)
                             {
-                                for (int k = 0; k < spaces[j].blockHeld.numberOfIterations; k++)
+                                for (int counter = 0; counter < currentSpace.blockHeld.numberOfIterations; counter++)
                                 {
-                                    Debug.Log("Adding " + spaces[j].blockHeld.direction);
-                                    jumpDirections.Add(spaces[i].blockHeld.direction);
+                                    Debug.Log("Adding " + currentSpace.blockHeld.direction);
+                                    jumpDirections.Add(currentSpace.blockHeld.direction);
                                 }
                             }
                             

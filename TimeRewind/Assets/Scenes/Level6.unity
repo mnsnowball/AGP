@@ -1668,6 +1668,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfIterations: 1
   currentIteration: 0
+  maximumIterations: 5
   iterationText: {fileID: 0}
   direction: 2
   isJumpTo: 0
@@ -1697,7 +1698,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 512122404}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1908,6 +1909,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 571769614}
   m_CullTransparentMesh: 0
+--- !u!1 &598972037 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1891228925354637220, guid: 0b6dba91d54e17848ab936154cef5e56,
+    type: 3}
+  m_PrefabInstance: {fileID: 1408519917}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &612588937
 GameObject:
   m_ObjectHideFlags: 0
@@ -2567,6 +2574,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: directionBlock (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b5c6b46b898a28c41941e9f1cde4d375,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5c6b46b898a28c41941e9f1cde4d375, type: 3}
@@ -3269,6 +3281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfIterations: 1
   currentIteration: 0
+  maximumIterations: 5
   iterationText: {fileID: 0}
   direction: 4
   isJumpTo: 0
@@ -3533,7 +3546,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1038245631}
-  m_LocalRotation: {x: 0.16783619, y: 0.000000021015746, z: -0.0000000034677208, w: 0.9858149}
+  m_LocalRotation: {x: 0.16783619, y: 0.000000020943048, z: -0.0000000034553438, w: 0.9858149}
   m_LocalPosition: {x: 1.846, y: 1.782, z: -5.7539997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4068,6 +4081,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1151128570}
   m_CullTransparentMesh: 0
+--- !u!114 &1153836048 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3221149719360336784, guid: 6fb48c96fa9a612438543d793510926b,
+    type: 3}
+  m_PrefabInstance: {fileID: 3221149719389422620}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab1fac926e9f7034c9b0724c1222c466, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1162094249
 GameObject:
   m_ObjectHideFlags: 0
@@ -4099,6 +4124,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacles: {fileID: 11400000, guid: 3cbbb2711dc48fb40bc69ca31d51da63, type: 2}
   blocks: {fileID: 11400000, guid: 83cbbd7f72c4af04c97b2dead5142658, type: 2}
+  clientEnv: {fileID: 11400000, guid: c9822445b3173a54c99fef6355ac71c1, type: 2}
+  hasMovedBlock: 0
   directionBlocks:
   - {fileID: 1179953354}
   - {fileID: 923535406}
@@ -4160,7 +4187,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1179953349}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -4229,6 +4256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfIterations: 1
   currentIteration: 0
+  maximumIterations: 5
   iterationText: {fileID: 0}
   direction: 0
   isJumpTo: 0
@@ -4327,7 +4355,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1285086868}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 75, y: 1.301, z: -3}
+  m_LocalPosition: {x: 75, y: 1.301, z: -2.11}
   m_LocalScale: {x: 0.6075, y: 1.643409, z: 0.6075}
   m_Children: []
   m_Father: {fileID: 1043891750}
@@ -4348,6 +4376,9 @@ MonoBehaviour:
   moveIncrement: 1
   moveSpeed: 5
   hasFinished: 0
+  startPosX: 3
+  startPosY: 4
+  em: {fileID: 1162094250}
 --- !u!54 &1285086875
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5563,6 +5594,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfIterations: 1
   currentIteration: 0
+  maximumIterations: 5
   iterationText: {fileID: 0}
   direction: 1
   isJumpTo: 0
@@ -5592,7 +5624,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1636057276}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -5676,7 +5708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eeb2e7d7935d9d4e935ebec2b0c5315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadingScreen: {fileID: 0}
+  loadingScreen: {fileID: 598972037}
   progressBar: {fileID: 0}
   isPaused: 0
   isPlaying: 0
@@ -5685,7 +5717,10 @@ MonoBehaviour:
   currentTimeIndex: 0
   isLevelComplete: 0
   levelCompletePanel: {fileID: 1324033635}
+  levelFailedPanel: {fileID: 1324033635}
   pausePanel: {fileID: 1573412470}
+  playerControl: {fileID: 1153836048}
+  canPlay: 0
 --- !u!4 &1649427902
 Transform:
   m_ObjectHideFlags: 0
@@ -6211,7 +6246,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1713469974}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34f32066db8ced441949b4c27372ecc6, type: 3}
   m_Name: 
@@ -6219,8 +6254,9 @@ MonoBehaviour:
   endPosition: {fileID: 1019859304}
   angle: 30
   resolution: 10
-  velocity: 5
   maxHeight: 1
+  minDistance: 0.01
+  middle: 0.6
 --- !u!120 &1713469977
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -7195,6 +7231,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfIterations: 1
   currentIteration: 0
+  maximumIterations: 5
   iterationText: {fileID: 0}
   direction: 3
   isJumpTo: 0
@@ -7224,7 +7261,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089802586}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -12924,7 +12961,7 @@ PrefabInstance:
     - target: {fileID: 3221149719360336789, guid: 6fb48c96fa9a612438543d793510926b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3221149719360336789, guid: 6fb48c96fa9a612438543d793510926b,
         type: 3}
@@ -14658,7 +14695,7 @@ Transform:
   m_Children:
   - {fileID: 673526271}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: -90.00001, z: 0}
 --- !u!23 &4281375074297674879
 MeshRenderer:
@@ -18637,7 +18674,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8513859188002506909}
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.23}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 543450653400550981}
@@ -21611,6 +21648,8 @@ GameObject:
   - component: {fileID: 6738450968347016063}
   - component: {fileID: 4109396432590797247}
   - component: {fileID: 7071182761262530836}
+  - component: {fileID: 8513859188002506911}
+  - component: {fileID: 8513859188002506910}
   m_Layer: 0
   m_Name: Cylinder.001
   m_TagString: Untagged
@@ -21618,6 +21657,31 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &8513859188002506910
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8513859188002506909}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.013447817, y: 0.008748864, z: 0.0057975166}
+  m_Center: {x: 0.012816273, y: 0.022121502, z: 0.00405559}
+--- !u!114 &8513859188002506911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8513859188002506909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 028110cd61d1c6842823fa28e57e3033, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &8544783548301397603
 MeshRenderer:
   m_ObjectHideFlags: 0

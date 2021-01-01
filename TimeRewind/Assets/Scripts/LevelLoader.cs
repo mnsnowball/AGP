@@ -19,8 +19,8 @@ public class LevelLoader : MonoBehaviour
         
     }
 
-    public void LoadLevel(){
-        StartCoroutine(LoadLevel(1));
+    public void LoadALevel(int index){
+        StartCoroutine(LoadLevel(index));
     }
 
     public IEnumerator LoadLevel(int buildIndex){
