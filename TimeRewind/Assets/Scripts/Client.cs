@@ -93,9 +93,11 @@ public class Client : MonoBehaviour
 
     public IEnumerator Move(Vector3 targetPos){
         isMoving = true;
-
-        while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
+        Vector3 distance = new Vector3(targetPos.x - transform.position.x, 0, targetPos.z - transform.position.z);
+        while ((distance).sqrMagnitude > 0.001f)
         {
+            targetPos = new Vector3(targetPos.x, transform.position.y, targetPos.z);
+            distance = new Vector3(targetPos.x - transform.position.x, 0, targetPos.z - transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
             yield return null;
         }
