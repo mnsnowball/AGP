@@ -153,7 +153,7 @@ MonoBehaviour:
   hasBeenHandled: 0
   jumpTo: {fileID: 0}
   hasJumpTo: 0
-  moveSpeed: 5
+  moveSpeed: 1.5
   xPosition: 2
   yPosition: 2
 --- !u!1 &7968305947764732114

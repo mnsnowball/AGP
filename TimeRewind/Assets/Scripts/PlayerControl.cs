@@ -6,6 +6,8 @@ public enum MoveState{Idle, MovingLeft, MovingRight, MovingUp, MovingDown}
 public enum RotationState{Right, Left, Up, Down}
 public class PlayerControl : MonoBehaviour
 {
+    public Animator anim;
+
     [Header("Movement Settings")]
     public float moveSpeed;
     public float rotationSpeed = 5f;
@@ -31,6 +33,7 @@ public class PlayerControl : MonoBehaviour
     [Header("Interactivity Settings")]
     public KeyCode interactKey;
     public KeyCode castKey = KeyCode.F;
+    public bool castingEnabled;
     bool canCast = true;
     bool isCastingJump = false;
     DirectionBlock jumpHolder;
@@ -58,7 +61,7 @@ public class PlayerControl : MonoBehaviour
         {
             canCast = true;
         }
-        if (Input.GetKey(castKey) && canCast)
+        if (Input.GetKey(castKey) && canCast && castingEnabled)
         {
             DirectionBlock theBlock = null;
             //Debug.Log("Casting...");
@@ -131,6 +134,7 @@ public class PlayerControl : MonoBehaviour
                     // set the endPosition of the jumpTrailRenderer to theBlock
                 } else{ // it's not a jump block and I'm not casting, so just add iterations
                     theBlock.AddIterations();
+                    anim.SetTrigger("Cast");
                 }
                             
             }
@@ -192,8 +196,8 @@ public class PlayerControl : MonoBehaviour
                     if (rotationState == RotationState.Right || rotationState == RotationState.Left)
                     {
                         // if I'm facing left or right, rotate, and return
-                        rotationState = RotationState.Up;
-                        StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x, transform.position.y, transform.position.z + moveIncrement)));
+                        //rotationState = RotationState.Up;
+                        StartCoroutine(Rotate(rotationState, RotationState.Up, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement)));
                         moveState = MoveState.Idle;
                         return;
                     } else if (rotationState == RotationState.Down)
@@ -207,8 +211,8 @@ public class PlayerControl : MonoBehaviour
                             {
                                 // if it's an obstacle, rotate myself and return
                                 Debug.Log("I'm facing down and need to rotate up since I'm trying to pull an obstacle");
-                                rotationState = RotationState.Up;
-                                StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x, transform.position.y, transform.position.z + moveIncrement)));
+                                //rotationState = RotationState.Up;
+                                StartCoroutine(Rotate(rotationState, RotationState.Up, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement)));
                                 moveState = MoveState.Idle;
                                 return;
                             } else if (environmentManager.HasBlock(yPosition + 1, xPosition))
@@ -223,18 +227,19 @@ public class PlayerControl : MonoBehaviour
                                 } else { 
                                     // if not, move myself up and move the block to my current position
                                     Debug.Log("Pulling up");
+                                    anim.SetTrigger("Pulling");
                                     environmentManager.MoveBlock(yPosition + 1, xPosition, yPosition, xPosition);
                                 }   
                                     
                             } else { // if there's not a block or obstacle there, just rotate and return
-                                rotationState = RotationState.Up;
-                                StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x, transform.position.y, transform.position.z + moveIncrement)));
+                                //rotationState = RotationState.Up;
+                                StartCoroutine(Rotate(rotationState, RotationState.Up, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement)));
                                 moveState = MoveState.Idle;
                                 return;
                             }
                         } else {
-                            rotationState = RotationState.Up;
-                            StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x, transform.position.y, transform.position.z + moveIncrement)));
+                            //rotationState = RotationState.Up;
+                            StartCoroutine(Rotate(rotationState, RotationState.Up, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement)));
                             moveState = MoveState.Idle;
                             return;
                         }
@@ -259,6 +264,7 @@ public class PlayerControl : MonoBehaviour
                                 } else {// if there's not a block at the next one, we can move but also move the block up
                                     // move block up
                                     Debug.Log("Block found going up, should move it up");
+                                    anim.SetTrigger("Pushing");
                                     environmentManager.MoveBlock(targetY, targetX, targetY - 1, targetX);
                                     // set the block's current position to false
                                     // set the block's next position to true
@@ -283,8 +289,8 @@ public class PlayerControl : MonoBehaviour
                     if (rotationState == RotationState.Left || rotationState == RotationState.Right)
                     {
                         // if so, rotate and return
-                        rotationState = RotationState.Down;
-                        StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement)));
+                        //rotationState = RotationState.Down;
+                        StartCoroutine(Rotate(rotationState, RotationState.Down, new Vector3(transform.position.x, transform.position.y, transform.position.z + moveIncrement)));
                         moveState = MoveState.Idle;
                         return;
                     } else if (rotationState == RotationState.Up)
@@ -298,8 +304,8 @@ public class PlayerControl : MonoBehaviour
                             {
                                 // if it's an obstacle, rotate myself and return
                                 Debug.Log("I'm facing up and need to rotate down since I'm trying to pull an obstacle");
-                                rotationState = RotationState.Down;
-                                StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement)));
+                                //rotationState = RotationState.Down;
+                                StartCoroutine(Rotate(rotationState, RotationState.Down, new Vector3(transform.position.x, transform.position.y, transform.position.z + moveIncrement)));
                                 moveState = MoveState.Idle;
                                 return;
                             } else if (environmentManager.HasBlock(yPosition - 1, xPosition))
@@ -314,18 +320,19 @@ public class PlayerControl : MonoBehaviour
                                 } else { 
                                     // if not, move myself to the right and move the block to my current position
                                     Debug.Log("Pulling down");
+                                    anim.SetTrigger("Pulling");
                                     environmentManager.MoveBlock(yPosition - 1, xPosition, yPosition, xPosition);
                                 }   
                                     
                             } else { // if there's not a block or obstacle there, just rotate and return
-                                rotationState = RotationState.Down;
-                                StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement)));
+                                //rotationState = RotationState.Down;
+                                StartCoroutine(Rotate(rotationState, RotationState.Down, new Vector3(transform.position.x, transform.position.y, transform.position.z + moveIncrement)));
                                 moveState = MoveState.Idle;
                                 return;
                             }
                         } else {
-                            rotationState = RotationState.Down;
-                            StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement)));
+                            //rotationState = RotationState.Down;
+                            StartCoroutine(Rotate(rotationState, RotationState.Down, new Vector3(transform.position.x, transform.position.y, transform.position.z + moveIncrement)));
                             moveState = MoveState.Idle;
                             return;
                         }
@@ -350,6 +357,7 @@ public class PlayerControl : MonoBehaviour
                                 } else {// if there's not a block at the next one, we can move but also move the block down
                                     // move block down
                                     Debug.Log("Block found going down, should move it down");
+                                    anim.SetTrigger("Pushing");
                                     environmentManager.MoveBlock(targetY, targetX, targetY + 1, targetX);
                                     // set the block's current position to false
                                     // set the block's next position to true
@@ -376,8 +384,8 @@ public class PlayerControl : MonoBehaviour
                     if (rotationState == RotationState.Up || rotationState == RotationState.Down)
                     {
                         // if I'm facing up or down, rotate, and return
-                        rotationState = RotationState.Left;
-                        StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z)));
+                        //rotationState = RotationState.Left;
+                        StartCoroutine(Rotate(rotationState, RotationState.Left, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z)));
                         moveState = MoveState.Idle;
                         return;
                     } else if (rotationState == RotationState.Right)
@@ -391,8 +399,8 @@ public class PlayerControl : MonoBehaviour
                             {
                                 // if it's an obstacle, rotate myself and return
                                 Debug.Log("I'm facing right and need to rotate to the left since I'm trying to pull an obstacle");
-                                rotationState = RotationState.Left;
-                                StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z )));
+                                //rotationState = RotationState.Left;
+                                StartCoroutine(Rotate(rotationState, RotationState.Left, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z )));
                                 moveState = MoveState.Idle;
                                 return;
                             } else if (environmentManager.HasBlock(yPosition, xPosition + 1))
@@ -408,18 +416,19 @@ public class PlayerControl : MonoBehaviour
                                 } else { 
                                     // if not, move myself to the right and move the block to my current position
                                     Debug.Log("Pulling to the left!");
+                                    anim.SetTrigger("Pulling");
                                     environmentManager.MoveBlock(yPosition, xPosition + 1, yPosition, xPosition);
                                 }   
                                     
                             } else { // if there's not a block or obstacle there, just rotate and return
-                                rotationState = RotationState.Left;
-                                StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z)));
+                                //rotationState = RotationState.Left;
+                                StartCoroutine(Rotate(rotationState, RotationState.Left, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z)));
                                 moveState = MoveState.Idle;
                                 return;
                             }
                         } else {
-                            rotationState = RotationState.Left;
-                            StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z)));
+                            //rotationState = RotationState.Left;
+                            StartCoroutine(Rotate(rotationState, RotationState.Left, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z)));
                             moveState = MoveState.Idle;
                             return;
                         }
@@ -444,6 +453,7 @@ public class PlayerControl : MonoBehaviour
                                 } else {// if there's not a block at the next one, we can move but also move the block to the right
                                     // move block to the right
                                     Debug.Log("Block found going right, should move it right");
+                                    anim.SetTrigger("Pushing");
                                     environmentManager.MoveBlock(targetY, targetX, targetY, targetX - 1);
                                     // set the block's current position to false
                                     // set the block's next position to true
@@ -468,8 +478,8 @@ public class PlayerControl : MonoBehaviour
                     if (rotationState == RotationState.Up || rotationState == RotationState.Down)
                     {
                         // if I'm facing up or down, rotate, and return
-                        rotationState = RotationState.Right;
-                        StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z)));
+                        //rotationState = RotationState.Right;
+                        StartCoroutine(Rotate(rotationState, RotationState.Right, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z)));
                         moveState = MoveState.Idle;
                         return;
                     } else if (rotationState == RotationState.Left)
@@ -483,8 +493,8 @@ public class PlayerControl : MonoBehaviour
                             {
                                 // if it's an obstacle, rotate myself and return
                                 Debug.Log("I'm facing left and need to rotate to the right since I'm trying to pull an obstacle");
-                                rotationState = RotationState.Right;
-                                StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z )));
+                                //rotationState = RotationState.Right;
+                                StartCoroutine(Rotate(rotationState, RotationState.Right, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z )));
                                 moveState = MoveState.Idle;
                                 return;
                             } else if (environmentManager.HasBlock(yPosition, xPosition - 1))
@@ -499,18 +509,19 @@ public class PlayerControl : MonoBehaviour
                                 } else { 
                                     // if not, move myself to the right and move the block to my current position
                                     Debug.Log("Pulling to the right!");
+                                    anim.SetTrigger("Pulling");
                                     environmentManager.MoveBlock(yPosition, xPosition - 1, yPosition, xPosition);
                                 }   
                                     
                             } else { // if there's not a block or obstacle there, just rotate and return
-                                rotationState = RotationState.Right;
-                                StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z)));
+                                //rotationState = RotationState.Right;
+                                StartCoroutine(Rotate(rotationState, RotationState.Right, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z)));
                                 moveState = MoveState.Idle;
                                 return;
                             }
                         } else {
-                            rotationState = RotationState.Right;
-                            StartCoroutine(Rotate(rotationState, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z)));
+                            //rotationState = RotationState.Right;
+                            StartCoroutine(Rotate(rotationState, RotationState.Right, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z)));
                             moveState = MoveState.Idle;
                             return;
                         }
@@ -536,6 +547,7 @@ public class PlayerControl : MonoBehaviour
                                     // move block to the right
                                     Debug.Log("Block found going right, should move it right");
                                     environmentManager.MoveBlock(targetY, targetX, targetY, targetX + 1);
+                                    anim.SetTrigger("Pushing");
                                     
                                 }
                                 
@@ -559,9 +571,10 @@ public class PlayerControl : MonoBehaviour
                 {
                     xPosition = targetX;
                     yPosition = targetY;
+                    anim.SetTrigger("Walking");
                     StartCoroutine(Move(targetPos));
 
-                }else{
+                } else {
                     moveState = MoveState.Idle;
                 }// if it's occupied,  dont do anything
                                 
@@ -570,8 +583,8 @@ public class PlayerControl : MonoBehaviour
     }
 
     IEnumerator Move(Vector3 targetPos){
-
-        while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
+        yield return new WaitForSeconds(0.25f);
+        while ((targetPos - transform.position).sqrMagnitude > 0.000001f)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
             yield return null;
@@ -579,34 +592,99 @@ public class PlayerControl : MonoBehaviour
 
         transform.position = targetPos;
         moveState = MoveState.Idle;
+        anim.SetTrigger("Idle");
     }
 
-    IEnumerator Rotate(RotationState state, Vector3 target){
+    IEnumerator Rotate(RotationState oldState, RotationState newState, Vector3 target){
         isRotating = true;
         Vector3 targetDirection = new Vector3(0,0,0);
         targetDirection = transform.position  - target;
+
+        //play turn animation
+        switch (oldState)
+        {
+            case RotationState.Right:
+                if (newState == RotationState.Down)
+                {
+                    anim.SetTrigger("TurnRight");
+                }
+                else if (newState == RotationState.Left)
+                {
+                    anim.SetTrigger("TurnLeft");
+                }
+                else if (newState == RotationState.Up)
+                {
+                    anim.SetTrigger("TurnRight");
+                }
+                break;
+            case RotationState.Left:
+                if (newState == RotationState.Down)
+                {
+                    anim.SetTrigger("TurnLeft");
+                }
+                else if (newState == RotationState.Right)
+                {
+                    anim.SetTrigger("TurnLeft");
+                }
+                else if (newState == RotationState.Up)
+                {
+                    anim.SetTrigger("TurnRight");
+                }
+                break;
+            case RotationState.Up:
+                if (newState == RotationState.Down)
+                {
+                    anim.SetTrigger("TurnLeft");
+                }
+                else if (newState == RotationState.Right)
+                {
+                    anim.SetTrigger("TurnRight");
+                }
+                else if (newState == RotationState.Left)
+                {
+                    anim.SetTrigger("TurnLeft");
+                }
+                break;
+            case RotationState.Down:
+                if (newState == RotationState.Up)
+                {
+                    anim.SetTrigger("TurnLeft");
+                }
+                else if (newState == RotationState.Right)
+                {
+                    anim.SetTrigger("TurnLeft");
+                }
+                else if (newState == RotationState.Left)
+                {
+                    anim.SetTrigger("TurnRight");
+                }
+                break;
+            default:
+                break;
+        }
+        rotationState = newState;
         // rotate in the target direction
         while(Vector3.Angle(transform.forward, targetDirection) > 3){
             Vector3 newDirection  = Vector3.RotateTowards(transform.forward, targetDirection, Time.deltaTime * rotationSpeed, 0.0f);
             transform.rotation = Quaternion.LookRotation(newDirection);
             yield return null;
         }
-        switch (state)
+        switch (newState)
         {
             case RotationState.Left:
-                transform.eulerAngles = new Vector3(0f, 90f, 0f);
-            break;
-
-            case RotationState.Right:
                 transform.eulerAngles = new Vector3(0f, -90f, 0f);
             break;
 
+            case RotationState.Right:
+                transform.eulerAngles = new Vector3(0f, 90f, 0f);
+            break;
+
             case RotationState.Up:
-                transform.eulerAngles = new Vector3(0f, 180f, 0f);
+                transform.eulerAngles = new Vector3(0f, 0f, 0f);
             break;
 
             case RotationState.Down:
-                transform.eulerAngles = new Vector3(0f, 0f, 0f);
+                transform.eulerAngles = new Vector3(0f, 180f, 0f);
             break;
 
             default:
@@ -614,6 +692,7 @@ public class PlayerControl : MonoBehaviour
         }
         
         isRotating = false;
+        yield return null;
     }
 
     public void StopMoving(){
@@ -622,5 +701,17 @@ public class PlayerControl : MonoBehaviour
 
     public void StartMoving(){
         canMove = true;
+    }
+
+    public void Defeated() {
+        anim.SetTrigger("Defeat");
+    }
+
+    public void Victory() {
+        anim.SetTrigger("Victory");
+    }
+
+    public void PlaySceneAnim() {
+        anim.SetTrigger("PlayScene");
     }
 }

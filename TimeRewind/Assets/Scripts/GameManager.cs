@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     List<AsyncOperation> scenesLoading;
     public PlayerControl playerControl;
     public bool canPlay = false;
+    public bool isPauseLocked = true;
     bool isLevelFailed;
 
     // Start is called before the first frame update
@@ -102,7 +103,8 @@ public class GameManager : MonoBehaviour
 
     public void SetPause(bool toSet){
         isPaused = toSet;
-        pausePanel.SetActive(isPaused);
+        //pausePanel.SetActive(isPaused);
+        pausePanel.GetComponent<Animator>().SetBool("isPaused", isPaused);
     }
     
     // enables UI to say the level is complete and sets time scale to zero
@@ -110,6 +112,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Level complete!");
         isLevelComplete = true;
         EnableObject(levelCompletePanel);
+        playerControl.Victory();
         //Time.timeScale = 0;
     }
 
@@ -138,6 +141,8 @@ public class GameManager : MonoBehaviour
 
     void PlayScene(){
         reader.Play();
+        playerControl.StopMoving();
+        playerControl.PlaySceneAnim();
     }
 
     public void StopPlayerMoving(){

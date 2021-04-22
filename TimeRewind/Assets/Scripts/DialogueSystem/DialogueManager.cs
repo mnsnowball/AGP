@@ -18,6 +18,10 @@ public class DialogueManager : MonoBehaviour
         sentences = new Queue<string>();
     }
 
+    public void SkipDialogue() {
+        EndDialogue();
+    }
+
     
 
     public void StartDialogue(Dialogue dialogue)
