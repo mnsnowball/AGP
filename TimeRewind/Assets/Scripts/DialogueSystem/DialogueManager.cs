@@ -72,6 +72,7 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
+        CameraManager.ins.SetChangeEnabled(true);
         tm.StopTalking();
         animator.SetBool("isOpen", false);
         

@@ -8,6 +8,7 @@ public class ButtonManager : MonoBehaviour
     public GameObject enabledPos;
     public GameObject disabledPos;
     public void LoadTheScene(string toLoad){
+        Debug.Log("ButtonManager Loading");
         SceneManager.LoadScene(toLoad);
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 public enum Direction{up, down, left, right, jump, wait}
 public class DirectionBlock : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class DirectionBlock : MonoBehaviour
     // these variables should only be used if this block is a jump block
     public DirectionBlock jumpTo;
     public bool hasJumpTo;
+    public GameObject dust;
 
 
     [Header("Movement Settings")]
@@ -27,9 +29,13 @@ public class DirectionBlock : MonoBehaviour
     public int xPosition; // the x position on the blocks grid
     public int yPosition; // the y position on the blocks grid
 
+
     public IEnumerator Move(Vector3 targetPos){
         isMoving = true;
-
+        while (EnvironmentManager.instance.canStartMove == false) { // dont move until the environment manager says you can move
+            yield return null;
+        }
+        Instantiate(dust, transform.position, Quaternion.identity);
         while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
@@ -38,6 +44,8 @@ public class DirectionBlock : MonoBehaviour
 
         transform.position = targetPos;
         isMoving = false;
+        EnvironmentManager.instance.StopMove(); // reset the movement bool now that I'm done moving
+                                                // movement is locked to a trigger in the player's animator, in the pushing/pulling animations
     }
 
     public void MoveToken(Vector3 targetPos){

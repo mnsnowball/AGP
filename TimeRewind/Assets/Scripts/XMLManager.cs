@@ -37,26 +37,6 @@ public class XMLManager : MonoBehaviour
         stream.Close();
     }
 
-    public void SetCamAssist(Toggle toSet){
-        userPrefs.cameraAssist = toSet.isOn;
-    }
-
-    public void SetInvertCamX(Toggle toSet){
-        userPrefs.invertCameraX = toSet.isOn;
-    }
-
-    public void SetInvertCamY(Toggle toSet){
-        userPrefs.invertCameraY = toSet.isOn;
-    }
-
-    public void SetContrast(Slider toSet){
-        userPrefs.contrast = (int)toSet.value;
-    }
-
-    public void SetFOV(Slider toSet){
-        userPrefs.fov = (int)toSet.value;
-    }
-
 }
 
 
@@ -70,36 +50,31 @@ public class UserPrefs {
     //display settings
     public bool enabledBackgroundMovement;
     public bool windowedMode;
-    public int fov;
     public int contrast;
-    public int fontSize;
 
     //gameplay settings
-    public bool cameraAssist;
     public bool invertCameraX;
     public bool invertCameraY;
 
-    
-    public UserPrefs(){    // default settings defined here
+    // default settings defined here
+    public UserPrefs()
+    {    
         masterVolume = 0.7f;
         sfxVolume = 0.7f;
         backgroundVolume = 0.7f;
 
         //display settings
-        enabledBackgroundMovement = true;
         windowedMode = false;
-        fov = 70;
         contrast = 50;
-        fontSize = 30;
 
 
         //gameplay settings
-        cameraAssist = false;
         invertCameraX = false;
         invertCameraY = false;
     }
 
-    public void SetVolume(float master, float sfx, float music){
+    public void SetVolume(float master, float sfx, float music)
+    {
         masterVolume = master;
         sfxVolume = sfx;
         backgroundVolume = music;

@@ -77,7 +77,8 @@ MonoBehaviour:
   hasBeenHandled: 0
   jumpTo: {fileID: 0}
   hasJumpTo: 0
-  moveSpeed: 1.5
+  dust: {fileID: 2904514297850515572, guid: 42f0db7d481eeb8449eb9e8eaeed225e, type: 3}
+  moveSpeed: 2
   xPosition: 4
   yPosition: 3
 --- !u!1 &2859372725906745493

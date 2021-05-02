@@ -24,6 +24,8 @@ public class TutorialManager : MonoBehaviour
     public void TriggerDialogue()
     {
         GameManager.instance.StopPlayerMoving();
+
+        CameraManager.ins.SetChangeEnabled(false);
         isTalking = true;
 
         dm.StartDialogue(activeDialogue);

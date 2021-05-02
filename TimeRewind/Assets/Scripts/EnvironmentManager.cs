@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Array2DEditor;
+using System;
 
 
 public class EnvironmentManager : MonoBehaviour
@@ -19,10 +20,11 @@ public class EnvironmentManager : MonoBehaviour
     public bool hasMovedBlock = false; // needed for the tutorial
     public List<DirectionBlock> directionBlocks; // will check the indices of these against those passed in
     public float moveIncrement = 1;
+    public bool canStartMove = false; // needed for synchronizing block movement with animation
 
-    void Awake(){
+    void Awake() {
         instance = this;
-        
+
         obstacleCells = obstacles.GetCells();
         blockCells = blocks.GetCells();
         clientCells = clientEnv.GetCells();
@@ -30,37 +32,37 @@ public class EnvironmentManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        
+
+
     }
 
     // checks if a space is occupied and returns the result
-    public bool IsOccupied(int x, int y){
+    public bool IsOccupied(int x, int y) {
         return obstacleCells[x, y];
     }
 
-    public bool HasBlock(int x, int y){
+    public bool HasBlock(int x, int y) {
         //Debug.Log("The block at " + x + ", " + y + " is " + blockCells[x, y]);
         return blockCells[x, y];
     }
 
-    public bool HasClientObstacle(int x, int y){
+    public bool HasClientObstacle(int x, int y) {
         Debug.Log("Getting client at [" + x + ", " + y + "]");
         return clientCells[x, y];
     }
 
 
     // sets the bool at coordinate [x, y] 
-    public void SetOccupied(int x, int y, bool toSet){
+    public void SetOccupied(int x, int y, bool toSet) {
         obstacleCells[x, y] = toSet;
     }
 
-    public void SetBlock(int x, int y, bool toSet){
+    public void SetBlock(int x, int y, bool toSet) {
         blockCells[x, y] = toSet;
     }
 
     // this function finds the direction with the indices currentX and currentY and moves it to indices of targetX and targetY
-    public void MoveBlock(int currentY, int currentX, int targetY, int targetX){
+    public void MoveBlock(int currentY, int currentX, int targetY, int targetX) {
         hasMovedBlock = true;
         DirectionBlock toMove = null;
         // find the block whose indices match currentY and currentX
@@ -101,7 +103,7 @@ public class EnvironmentManager : MonoBehaviour
                     //blockCells[targetY, targetX] = true;
                     SetBlock(targetY, targetX, true);
                 }
-                
+
             } else if (currentX != targetX) // moving vertically
             {
                 // if targetX is greater, move to the right
@@ -130,12 +132,12 @@ public class EnvironmentManager : MonoBehaviour
             {
                 Debug.LogError("currentY and currentX = targetY and targetX, this function should not have been called");
             }
-        
+
         }
     }
 
     // returns a reference to the direction block at a specified environment coordinate
-    public DirectionBlock GetBlock(int x, int y){
+    public DirectionBlock GetBlock(int x, int y) {
         //Debug.Log("Getting blocks at [" + x + ", " + y + "]");
         DirectionBlock theBlock = null;
         for (int i = 0; i < directionBlocks.Count; i++)
@@ -146,6 +148,16 @@ public class EnvironmentManager : MonoBehaviour
             }
         }
         return theBlock;
+    }
+
+    public void StartMove() 
+    {
+        canStartMove = true;
+    }
+
+    public void StopMove() 
+    {
+        canStartMove = false;
     }
 
 }

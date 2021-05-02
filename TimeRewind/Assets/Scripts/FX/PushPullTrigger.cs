@@ -16,7 +16,10 @@ public class PushPullTrigger : MonoBehaviour
         
     }
 
-    public void Pull() {
-        Debug.Log("Yeehaw");
+    public void Pull()
+    {
+        EnvironmentManager.instance.StartMove();
+        AudioManager.instance.PlaySound("BlockMove");
+        //Debug.Log("Yeehaw");
     }
 }

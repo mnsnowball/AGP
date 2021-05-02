@@ -16,14 +16,14 @@ public class GameManager : MonoBehaviour
     public float playDelay = 0.75f;
     public BlockReader reader;
     bool canPause;
-    //public TimeBlock[] timeBlocks;
     public int currentTimeIndex = 0;
     public bool isLevelComplete = false;
-    public GameObject levelCompletePanel;
+    public GameObject[] levelCompleteObjects;
     public GameObject levelFailedPanel;
     public GameObject pausePanel;
     List<AsyncOperation> scenesLoading;
     public PlayerControl playerControl;
+    public ParticleSystem environmentParticles;
     public bool canPlay = false;
     public bool isPauseLocked = true;
     bool isLevelFailed;
@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
         isPaused = false;
         canPause = true;
         Time.timeScale = 1;
+        
     }
 
     // Update is called once per frame
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && !isPlaying && canPlay)
         {
             isPlaying = true;
+            Debug.Log("Playing Scene");
             Invoke("PlayScene", playDelay);
         }
     }
@@ -61,7 +63,8 @@ public class GameManager : MonoBehaviour
 
     //List<AsyncOperation> scenesLoading = new List<AsyncOperation>();
 
-    public void LoadGame(){
+    public void LoadGame()
+    {
         loadingScreen.gameObject.SetActive(true);
         scenesLoading = new List<AsyncOperation>();
         
@@ -72,7 +75,8 @@ public class GameManager : MonoBehaviour
     }
 
     float totalSceneProgress;
-    public IEnumerator GetSceneLoadProgress(List<AsyncOperation> theScenes){
+    public IEnumerator GetSceneLoadProgress(List<AsyncOperation> theScenes)
+    {
 
         for (int i = 0; i < scenesLoading.Count; i++)
         {
@@ -95,61 +99,89 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetPlay(){
+    public void SetPlay()
+    {
 
         isPaused = false;
         //timeBlocks[currentTimeIndex].StartPlayingBlock();
     }
 
-    public void SetPause(bool toSet){
+    public void SetPause(bool toSet)
+    {
         isPaused = toSet;
-        //pausePanel.SetActive(isPaused);
+        pausePanel.GetComponent<CanvasGroup>().interactable = isPaused;
         pausePanel.GetComponent<Animator>().SetBool("isPaused", isPaused);
     }
     
     // enables UI to say the level is complete and sets time scale to zero
-    public void LevelComplete(){
+    public void LevelComplete()
+    {
         Debug.Log("Level complete!");
+        AudioManager.instance.PlaySound("LevelComplete");
         isLevelComplete = true;
-        EnableObject(levelCompletePanel);
+        EnableLevelCompleteObjects();
         playerControl.Victory();
-        //Time.timeScale = 0;
+        environmentParticles.TriggerSubEmitter(0);
     }
 
-    public void LevelFailed(){
+    public void LevelFailed()
+    {
         if (!isLevelFailed)
         {
             isLevelFailed = true;
             levelFailedPanel.SetActive(true);
+            AudioManager.instance.PlaySound("LevelFailed");
         }
     }
 
     // enables any object passed in
-    public void EnableObject(GameObject obj){
+    public void EnableObject(GameObject obj)
+    {
         obj.SetActive(true);
     }
 
+    private void EnableLevelCompleteObjects() 
+    {
+        foreach (GameObject item in levelCompleteObjects)
+        {
+            if (item != null)
+            {
+                EnableObject(item);
+            }
+        }
+    }
+
     // disables any object passed in
-    public void DisableObject(GameObject obj){
+    public void DisableObject(GameObject obj)
+    {
         obj.SetActive(false);
     }
 
     // runs the LevelComplete function after toWait seconds
-    public void WaitThenLevelComplete(float toWait){
+    public void WaitThenLevelComplete(float toWait)
+    {
         Invoke("LevelComplete", toWait);
     }
 
-    void PlayScene(){
+    void PlayScene()
+    {
         reader.Play();
         playerControl.StopMoving();
         playerControl.PlaySceneAnim();
+        AudioManager.instance.PlaySound("PlayScene");
+        CameraManager.ins.SetChangeEnabled(true);
+
+        bool doTransition = true;
+        CameraManager.ins.StartCoroutine(CameraManager.ins.TransitionTo(CameraMode.View, doTransition));
     }
 
-    public void StopPlayerMoving(){
+    public void StopPlayerMoving()
+    {
         playerControl.StopMoving();
     }
 
-    public void StartPlayerMoving(){
+    public void StartPlayerMoving()
+    {
         playerControl.StartMoving();
     }
 }

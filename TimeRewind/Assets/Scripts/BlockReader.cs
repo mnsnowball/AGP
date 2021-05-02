@@ -34,7 +34,7 @@ public class BlockReader : MonoBehaviour
                             jump = currentSpace.blockHeld;
                             Debug.Log("Found jump block. Adding direction set.");
                             jumpFound = true;
-                            for (int k = 0; k < jump.numberOfIterations + 1; k++)
+                            for (int counter = 0; counter < jump.numberOfIterations + 1; counter++)
                             {
                                 theClient.AddDirectionSet(jumpDirections);
                             }
@@ -42,7 +42,7 @@ public class BlockReader : MonoBehaviour
                             currentSpace.blockHeld.hasBeenHandled = true;
                             i = j; // skips the jump block
                             break;
-                        } else{
+                        } else {
                             if (currentSpace.hasBlock)
                             {
                                 for (int counter = 0; counter < currentSpace.blockHeld.numberOfIterations; counter++)
