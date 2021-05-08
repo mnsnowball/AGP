@@ -14,18 +14,21 @@ public class GameManager : MonoBehaviour
     public bool isPaused;
     public bool isPlaying;
     public float playDelay = 0.75f;
-    public BlockReader reader;
+
+    private BlockReader reader;
     bool canPause;
-    public int currentTimeIndex = 0;
+
     public bool isLevelComplete = false;
     public GameObject[] levelCompleteObjects;
     public GameObject levelFailedPanel;
     public GameObject pausePanel;
     List<AsyncOperation> scenesLoading;
     public PlayerControl playerControl;
-    public ParticleSystem environmentParticles;
+    private Client client;
+    //public ParticleSystem environmentParticles;
     public bool canPlay = false;
     public bool isPauseLocked = true;
+    public int thisLevelIndex;
     bool isLevelFailed;
 
     // Start is called before the first frame update
@@ -35,7 +38,8 @@ public class GameManager : MonoBehaviour
         isPaused = false;
         canPause = true;
         Time.timeScale = 1;
-        
+        reader = GameObject.FindObjectOfType<BlockReader>();
+        client = GameObject.FindObjectOfType<Client>();
     }
 
     // Update is called once per frame
@@ -121,7 +125,13 @@ public class GameManager : MonoBehaviour
         isLevelComplete = true;
         EnableLevelCompleteObjects();
         playerControl.Victory();
-        environmentParticles.TriggerSubEmitter(0);
+        client.LevelComplete();
+        //environmentParticles.TriggerSubEmitter(0);
+        if (thisLevelIndex < (XMLManager.ins.unlockedLevels.isUnlocked.Count - 2))
+        {
+            XMLManager.ins.unlockedLevels.isUnlocked[thisLevelIndex + 1] = true;
+        }
+       
     }
 
     public void LevelFailed()

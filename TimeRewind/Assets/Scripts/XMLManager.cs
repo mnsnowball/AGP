@@ -13,12 +13,23 @@ public class XMLManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        ins = this;
+        if (ins != null && ins != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        else
+        {
+            ins = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
         LoadPrefs();
+        LoadUnlockedLevels();
     }
 
     // list of items
     public UserPrefs userPrefs;
+    public Levels unlockedLevels;
 
     // save items
     public void SavePrefs() {
@@ -37,10 +48,39 @@ public class XMLManager : MonoBehaviour
         stream.Close();
     }
 
+    public void SaveUnlockedLevels() 
+    {
+        Debug.Log("Saving unlocks");
+        // open a new xml file
+        XmlSerializer serializer = new XmlSerializer(typeof(Levels));
+        FileStream stream = new FileStream(Application.dataPath + "/StreamingAssets/XML/levels_unlocked.xml", FileMode.Create);
+        serializer.Serialize(stream, unlockedLevels);
+        stream.Close();
+    }
+
+    public void LoadUnlockedLevels()
+    {
+        XmlSerializer serializer = new XmlSerializer(typeof(Levels));
+        FileStream stream = new FileStream(Application.dataPath + "/StreamingAssets/XML/levels_unlocked.xml", FileMode.Open);
+        unlockedLevels = serializer.Deserialize(stream) as Levels;
+        stream.Close();
+    }
+
+}
+
+[System.Serializable]
+public class Levels
+{
+    public List<bool> isUnlocked;
+
+    public Levels() 
+    {
+        isUnlocked = new List<bool>();
+    }
 }
 
 
-[System.Serializable]
+    [System.Serializable]
 public class UserPrefs {
     //sound settings
     public float masterVolume;
@@ -50,7 +90,7 @@ public class UserPrefs {
     //display settings
     public bool enabledBackgroundMovement;
     public bool windowedMode;
-    public int contrast;
+    public float contrast;
 
     //gameplay settings
     public bool invertCameraX;
@@ -65,7 +105,7 @@ public class UserPrefs {
 
         //display settings
         windowedMode = false;
-        contrast = 50;
+        contrast = 30f;
 
 
         //gameplay settings

@@ -73,7 +73,18 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        
+
     }
 
 
@@ -90,10 +101,12 @@ public class AudioManager : MonoBehaviour
 
         foreach(Sound s in sounds){
             GameObject _go = new GameObject("Sound_" + s.name);
+            _go.transform.SetParent(this.transform);
             s.SetSource(_go.AddComponent<AudioSource>());
             //Debug.Log(s.source);
             s.source.clip = s.clip;
             s.manager = this;
+            
             if (s.type == SoundType.SFX)
             {
                 s.source.volume = s.volume * sfxVolume * masterVolume;
@@ -124,12 +137,12 @@ public class AudioManager : MonoBehaviour
             s.source.loop = s.loop;
         }
 
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().buildIndex == 0 || SceneManager.GetActiveScene().buildIndex == 1)
         {
             PlaySound("Menu_BG");
         }
 
-        if (SceneManager.GetActiveScene().buildIndex > 0)
+        if (SceneManager.GetActiveScene().buildIndex > 1)
         {
             PlaySound("Background_Ambience");
         }
@@ -147,6 +160,18 @@ public class AudioManager : MonoBehaviour
         }
            
         Debug.LogWarning("AudioManager: No sound of name " + _name + " was found");     
+    }
+
+    public Sound FindSound(string _name)
+    {
+        for (int index = 0; index < sounds.Length; index++)
+        {
+            if (sounds[index].name == _name)
+            {
+                return sounds[index];
+            }
+        }
+        return null;
     }
 
     public void UpdateVolume(float master, float music, float sfx)
@@ -175,5 +200,24 @@ public class AudioManager : MonoBehaviour
             dialogueSounds[playIndex].Play();
         }
         
+    }
+
+    public void TransitionSoundOut() 
+    {
+        
+    }
+
+    public void TransitionSoundIn()
+    {
+
+    }
+
+    public void DeleteSelf() {
+        instance = null;
+        Destroy(this.gameObject);
+    }
+
+    IEnumerator TransitionSound(Sound theSound) {
+        yield return null;
     }
 }

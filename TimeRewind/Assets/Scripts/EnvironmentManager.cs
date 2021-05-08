@@ -47,7 +47,7 @@ public class EnvironmentManager : MonoBehaviour
     }
 
     public bool HasClientObstacle(int x, int y) {
-        Debug.Log("Getting client at [" + x + ", " + y + "]");
+        //Debug.Log("Getting client at [" + x + ", " + y + "]");
         return clientCells[x, y];
     }
 
@@ -58,6 +58,7 @@ public class EnvironmentManager : MonoBehaviour
     }
 
     public void SetBlock(int x, int y, bool toSet) {
+        //Debug.Log("Setting block at coordinates " + x + ", " + y + " to " + toSet);
         blockCells[x, y] = toSet;
     }
 

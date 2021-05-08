@@ -130,11 +130,10 @@ public class CameraManager : MonoBehaviour
         mode = CameraMode.Paused;
 
         pauseCam.SetActive(true);
-        mode = CameraMode.Paused;
+        //mode = CameraMode.Paused;
         //sceneCam.SetActive(false);
         sinclairCam.SetActive(false);
         
-        mode = CameraMode.Paused;
     }
 
     public IEnumerator TransitionTo(CameraMode theMode, bool doTransition) 
@@ -185,6 +184,7 @@ public class CameraManager : MonoBehaviour
     }
 
     public void SetChangeEnabled(bool toSet) {
+        //Debug.Log("Setting change enabled to " + toSet);
         isChangeEnabled = toSet;
     }
 }

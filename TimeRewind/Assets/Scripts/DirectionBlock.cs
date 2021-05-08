@@ -31,6 +31,9 @@ public class DirectionBlock : MonoBehaviour
 
 
     public IEnumerator Move(Vector3 targetPos){
+        float moveTime = 0.0f;
+        float maxMoveTime = 0.5f;
+        Debug.Log("Moving block");
         isMoving = true;
         while (EnvironmentManager.instance.canStartMove == false) { // dont move until the environment manager says you can move
             yield return null;
@@ -38,12 +41,23 @@ public class DirectionBlock : MonoBehaviour
         Instantiate(dust, transform.position, Quaternion.identity);
         while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-            yield return null;
+            moveTime += Time.deltaTime;
+            if (moveTime < maxMoveTime)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+                Debug.Log("Moving...");
+                yield return null;
+            }
+            else
+            {
+                break;
+            }
+            
         }
 
         transform.position = targetPos;
         isMoving = false;
+        Debug.Log("Done moving");
         EnvironmentManager.instance.StopMove(); // reset the movement bool now that I'm done moving
                                                 // movement is locked to a trigger in the player's animator, in the pushing/pulling animations
     }

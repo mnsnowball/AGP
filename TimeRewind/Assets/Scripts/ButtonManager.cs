@@ -18,10 +18,20 @@ public class ButtonManager : MonoBehaviour
     }
 
     public void EnableObject(GameObject toEnable){
+        CanvasGroup canvasGroup = toEnable.GetComponent<CanvasGroup>();
+        if (canvasGroup != null)
+        {
+            canvasGroup.interactable = true;
+        }
         toEnable.transform.position = enabledPos.transform.position;
     }
 
     public void DisableObject(GameObject toDisable){
+        CanvasGroup canvasGroup = toDisable.GetComponent<CanvasGroup>();
+        if (canvasGroup != null)
+        {
+            canvasGroup.interactable = false;
+        }
         toDisable.transform.position = disabledPos.transform.position;
     }  
 }

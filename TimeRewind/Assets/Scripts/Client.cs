@@ -8,6 +8,7 @@ public class Client : MonoBehaviour
     bool isMoving;
     public float moveIncrement = 1f;
     public float moveSpeed = 5f;
+    private Animator anim;
     public bool hasFinished = false;
     public int startPosX = 0;
     public int startPosY = 0;
@@ -17,6 +18,7 @@ public class Client : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        anim = GetComponentInChildren<Animator>();
         directions = new Queue<Direction>();
         currentXPos = startPosX;
         currentYPos = startPosY;
@@ -36,20 +38,23 @@ public class Client : MonoBehaviour
         }
     }
 
-    public void AddDirection(Direction toAdd){
+    public void AddDirection(Direction toAdd)
+    {
         directions.Enqueue(toAdd);
     }
 
-    public void AddDirectionSet(List<Direction> toAdd){
+    public void AddDirectionSet(List<Direction> toAdd)
+    {
         for (int i = 0; i < toAdd.Count; i++)
         {
-            Debug.Log("Adding " + toAdd[i]);
+            //Debug.Log("Adding " + toAdd[i]);
             directions.Enqueue(toAdd[i]);
         }
     }
 
-    public void ReadDirection(Direction toRead){
-        Debug.Log("Client: Reading " + toRead);
+    public void ReadDirection(Direction toRead)
+    {
+        //Debug.Log("Client: Reading " + toRead);
         Vector3 target = new Vector3(0,0,0);
         int targetX = currentXPos;
         int targetY = currentYPos;
@@ -91,7 +96,9 @@ public class Client : MonoBehaviour
         
     }
 
-    public IEnumerator Move(Vector3 targetPos){
+    public IEnumerator Move(Vector3 targetPos)
+    {
+        anim.SetTrigger("Move");
         isMoving = true;
         Vector3 distance = new Vector3(targetPos.x - transform.position.x, 0, targetPos.z - transform.position.z);
         while ((distance).sqrMagnitude > 0.001f)
@@ -104,5 +111,10 @@ public class Client : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         transform.position = targetPos;
         isMoving = false;
+    }
+
+    public void LevelComplete() 
+    {
+        anim.SetTrigger("FinishLevel");
     }
 }

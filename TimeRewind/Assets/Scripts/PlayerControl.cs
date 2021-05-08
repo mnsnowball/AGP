@@ -202,7 +202,8 @@ public class PlayerControl : MonoBehaviour
                 {
                     moveState = MoveState.MovingRight;
                     
-                } else if (input.x < 0) // going to the left
+                } 
+                else if (input.x < 0) // going to the left
                 {
                     moveState = MoveState.MovingLeft;
                 }
@@ -211,7 +212,8 @@ public class PlayerControl : MonoBehaviour
                 {
                     moveState = MoveState.MovingUp;
                     
-                } else if (input.z < 0) // going down
+                } 
+                else if (input.z < 0) // going down
                 {
                     moveState = MoveState.MovingDown;
                 }
@@ -231,7 +233,8 @@ public class PlayerControl : MonoBehaviour
                         StartCoroutine(Rotate(rotationState, RotationState.Up, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement))); // rotate up function
                         moveState = MoveState.Idle;
                         return;
-                    } else if (rotationState == RotationState.Down)
+                    } 
+                    else if (rotationState == RotationState.Down)
                     {
                         //if I'm facing down, check if I'm pressing interact button
                         if (interactButton)
@@ -241,23 +244,26 @@ public class PlayerControl : MonoBehaviour
                             if (environmentManager.IsOccupied(yPosition + 1, xPosition))
                             {
                                 // if it's an obstacle, rotate myself and return
-                                Debug.Log("I'm facing down and need to rotate up since I'm trying to pull an obstacle");
+                                //Debug.Log("I'm facing down and need to rotate up since I'm trying to pull an obstacle");
                                 //rotationState = RotationState.Up;
                                 StartCoroutine(Rotate(rotationState, RotationState.Up, new Vector3(transform.position.x, transform.position.y, transform.position.z - moveIncrement)));
                                 moveState = MoveState.Idle;
                                 return; // rotate up function
-                            } else if (environmentManager.HasBlock(yPosition + 1, xPosition))
+                            } 
+                            else if (environmentManager.HasBlock(yPosition + 1, xPosition))
                             {
                                 // if it's a block, does the spot under me have a block or obstruction?
                                 if (environmentManager.HasBlock(yPosition - 1, xPosition) || environmentManager.IsOccupied(yPosition - 1, xPosition))
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
-                                    Debug.Log("Trying to pull up but there's a block or obstruction in the way!");
+                                    //Debug.Log("Trying to pull up but there's a block or obstruction in the way!");
                                     moveState = MoveState.Idle;
                                     return;
-                                } else { 
+                                } 
+                                else 
+                                { 
                                     // if not, move myself up and move the block to my current position
-                                    Debug.Log("Pulling up");
+                                    //Debug.Log("Pulling up");
                                     anim.SetTrigger("Pulling");
                                     environmentManager.MoveBlock(yPosition + 1, xPosition, yPosition, xPosition);
                                 }   
@@ -287,7 +293,7 @@ public class PlayerControl : MonoBehaviour
                         if (interactButton)
                         {
                             // if I am, we're pushing
-                            Debug.Log("Pushing up");
+                            //Debug.Log("Pushing up");
                             // check environmentmanager the way it is now
                             //if there's a block there, check the next one up
                             if (environmentManager.HasBlock(targetY, targetX))
@@ -295,7 +301,7 @@ public class PlayerControl : MonoBehaviour
                                 //if that one has a block or an obstacle, don't do anything
                                 if (environmentManager.HasBlock(targetY - 1, targetX) || environmentManager.IsOccupied(targetY - 1, targetX)) 
                                 {
-                                    Debug.Log("Block or obstacle found up, not moving and returning instead...");
+                                    //Debug.Log("Block or obstacle found up, not moving and returning instead...");
                                     moveState = MoveState.Idle;
                                     return;
                                 } 
@@ -303,7 +309,7 @@ public class PlayerControl : MonoBehaviour
                                 {
                                     // if there's not a block at the next one, we can move but also move the block up
                                     // move block up
-                                    Debug.Log("Block found going up, should move it up");
+                                    //Debug.Log("Block found going up, should move it up");
                                     anim.SetTrigger("Pushing");
                                     environmentManager.MoveBlock(targetY, targetX, targetY - 1, targetX);
                                     // set the block's current position to false
@@ -316,7 +322,7 @@ public class PlayerControl : MonoBehaviour
                         else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX)) 
                         {
                             // if it isn't, we only need to check if there's a block or obstacle where we want to go
-                            Debug.Log("Not Moving up because there's a block or obstacle in the way");
+                            //Debug.Log("Not Moving up because there's a block or obstacle in the way");
                             moveState = MoveState.Idle;
                             return;
                         }
@@ -348,7 +354,7 @@ public class PlayerControl : MonoBehaviour
                             if (environmentManager.IsOccupied(yPosition - 1, xPosition))
                             {
                                 // if it's an obstacle, rotate myself and return
-                                Debug.Log("I'm facing up and need to rotate down since I'm trying to pull an obstacle");
+                                //Debug.Log("I'm facing up and need to rotate down since I'm trying to pull an obstacle");
                                 //rotationState = RotationState.Down;
                                 StartCoroutine(Rotate(rotationState, RotationState.Down, new Vector3(transform.position.x, transform.position.y, transform.position.z + moveIncrement)));//rotate func
                                 moveState = MoveState.Idle;
@@ -360,14 +366,14 @@ public class PlayerControl : MonoBehaviour
                                 if (environmentManager.HasBlock(yPosition + 1, xPosition) || environmentManager.IsOccupied(yPosition + 1, xPosition)) // is block occupied function
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
-                                    Debug.Log("Trying to pull but there's a block or obstruction in the way!");
+                                    //Debug.Log("Trying to pull but there's a block or obstruction in the way!");
                                     moveState = MoveState.Idle;
                                     return;
                                 }
                                 else
                                 {
                                     // if not, move myself to the right and move the block to my current position
-                                    Debug.Log("Pulling down");
+                                    //Debug.Log("Pulling down");
                                     anim.SetTrigger("Pulling");
                                     environmentManager.MoveBlock(yPosition - 1, xPosition, yPosition, xPosition);
                                 }
@@ -396,7 +402,7 @@ public class PlayerControl : MonoBehaviour
                         if (interactButton)
                         {
                             // if I am, we're pushing
-                            Debug.Log("Pushing down");
+                            //Debug.Log("Pushing down");
                             // check environmentmanager the way it is now
                             //if there's a block there, check the next one down
                             if (environmentManager.HasBlock(targetY, targetX))
@@ -404,14 +410,14 @@ public class PlayerControl : MonoBehaviour
                                 //if that one has a block or an obstacle, don't do anything
                                 if (environmentManager.HasBlock(targetY + 1, targetX) || environmentManager.IsOccupied(targetY + 1, targetX))
                                 {
-                                    Debug.Log("Block or obstacle found down, not moving and returning instead...");
+                                    //Debug.Log("Block or obstacle found down, not moving and returning instead...");
                                     moveState = MoveState.Idle;
                                     return;
                                 }
                                 else
                                 {// if there's not a block at the next one, we can move but also move the block down
                                     // move block down
-                                    Debug.Log("Block found going down, should move it down");
+                                    //Debug.Log("Block found going down, should move it down");
                                     anim.SetTrigger("Pushing");
                                     environmentManager.MoveBlock(targetY, targetX, targetY + 1, targetX);
                                     // set the block's current position to false
@@ -423,7 +429,7 @@ public class PlayerControl : MonoBehaviour
                         }
                         else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX))
                         {// if it isn't, we only need to check if there's a block or obstacle where we want to go
-                            Debug.Log("Not Moving down because there's a block or obstacle in the way");
+                            //Debug.Log("Not Moving down because there's a block or obstacle in the way");
                             moveState = MoveState.Idle;
                             return;
                         }
@@ -435,8 +441,6 @@ public class PlayerControl : MonoBehaviour
                     // targetx = current x index - 1
                     targetX = xPosition - 1;
 
-                    
-
                     // check if I'm facing up or down
                     if (rotationState == RotationState.Up || rotationState == RotationState.Down)
                     {
@@ -445,7 +449,8 @@ public class PlayerControl : MonoBehaviour
                         StartCoroutine(Rotate(rotationState, RotationState.Left, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z)));
                         moveState = MoveState.Idle;
                         return;
-                    } else if (rotationState == RotationState.Right)
+                    } 
+                    else if (rotationState == RotationState.Right)
                     {
                         //if I'm facing right, check if I'm pressing interact button
                         if (interactButton)
@@ -455,35 +460,42 @@ public class PlayerControl : MonoBehaviour
                             if (environmentManager.IsOccupied(yPosition, xPosition + 1))
                             {
                                 // if it's an obstacle, rotate myself and return
-                                Debug.Log("I'm facing right and need to rotate to the left since I'm trying to pull an obstacle");
+                                //Debug.Log("I'm facing right and need to rotate to the left since I'm trying to pull an obstacle");
                                 //rotationState = RotationState.Left;
                                 StartCoroutine(Rotate(rotationState, RotationState.Left, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z )));
                                 moveState = MoveState.Idle;
                                 return;
-                            } else if (environmentManager.HasBlock(yPosition, xPosition + 1))
+                            } 
+                            else if (environmentManager.HasBlock(yPosition, xPosition + 1))
                             {
                                 // if it's a block, does the spot to my left have a block or obstruction?
                                 // checking to see if there's room for me to move
                                 if (environmentManager.HasBlock(yPosition, xPosition - 1) || environmentManager.IsOccupied(yPosition, xPosition - 1))
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
-                                    Debug.Log("Trying to pull but there's a block or obstruction in the way!");
+                                    //Debug.Log("Trying to pull but there's a block or obstruction in the way!");
                                     moveState = MoveState.Idle;
                                     return;
-                                } else { 
+                                } 
+                                else 
+                                { 
                                     // if not, move myself to the right and move the block to my current position
-                                    Debug.Log("Pulling to the left!");
+                                    //Debug.Log("Pulling to the left!");
                                     anim.SetTrigger("Pulling");
                                     environmentManager.MoveBlock(yPosition, xPosition + 1, yPosition, xPosition);
                                 }   
                                     
-                            } else { // if there's not a block or obstacle there, just rotate and return
+                            } 
+                            else 
+                            { // if there's not a block or obstacle there, just rotate and return
                                 //rotationState = RotationState.Left;
                                 StartCoroutine(Rotate(rotationState, RotationState.Left, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z)));
                                 moveState = MoveState.Idle;
                                 return;
                             }
-                        } else {
+                        } 
+                        else 
+                        {
                             //rotationState = RotationState.Left;
                             StartCoroutine(Rotate(rotationState, RotationState.Left, new Vector3(transform.position.x + moveIncrement, transform.position.y, transform.position.z)));
                             moveState = MoveState.Idle;
@@ -491,12 +503,13 @@ public class PlayerControl : MonoBehaviour
                         }
                             
                         //if I'm not, then I need to rotate to the right and return
-                    } else // I'm facing left
+                    } 
+                    else // I'm facing left
                     {
                         if (interactButton)
                         {
                             // if I am, we're pushing
-                            Debug.Log("Pushing to the left");
+                            //Debug.Log("Pushing to the left");
                             // check environmentmanager the way it is now
                             //if there's a block there, check the next one to the left
                             if (environmentManager.HasBlock(targetY, targetX))
@@ -504,22 +517,27 @@ public class PlayerControl : MonoBehaviour
                                 //if that one has a block or an obstacle, don't do anything
                                 if (environmentManager.HasBlock(targetY, targetX - 1) || environmentManager.IsOccupied(targetY, targetX - 1))
                                 {
-                                    Debug.Log("Block or obstacle found going right, not moving and returning instead...");
+                                    //Debug.Log("Block or obstacle found going right, not moving and returning instead...");
                                     moveState = MoveState.Idle;
                                     return;
-                                } else {// if there's not a block at the next one, we can move but also move the block to the right
+                                } 
+                                else 
+                                {
+                                    // if there's not a block at the next one, we can move but also move the block to the right
                                     // move block to the right
-                                    Debug.Log("Block found going right, should move it right");
+                                    //Debug.Log("Block found going right, should move it right");
                                     anim.SetTrigger("Pushing");
                                     environmentManager.MoveBlock(targetY, targetX, targetY, targetX - 1);
                                     // set the block's current position to false
                                     // set the block's next position to true
                                     
-                                }
-                                
+                                } 
                             }
-                        } else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX)) {// if it isn't, we only need to check if there's a block or obstacle where we want to go
-                            Debug.Log("Not Moving left because there's a block or obstacle in the way");
+                        } 
+                        else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX)) 
+                        {
+                            // if it isn't, we only need to check if there's a block or obstacle where we want to go
+                            //Debug.Log("Not Moving left because there's a block or obstacle in the way");
                             moveState = MoveState.Idle;
                             return;
                         }
@@ -539,7 +557,8 @@ public class PlayerControl : MonoBehaviour
                         StartCoroutine(Rotate(rotationState, RotationState.Right, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z)));
                         moveState = MoveState.Idle;
                         return;
-                    } else if (rotationState == RotationState.Left)
+                    } 
+                    else if (rotationState == RotationState.Left)
                     {
                         //if I'm facing left, check if I'm pressing interact button
                         if (interactButton)
@@ -549,34 +568,41 @@ public class PlayerControl : MonoBehaviour
                             if (environmentManager.IsOccupied(yPosition, xPosition - 1))
                             {
                                 // if it's an obstacle, rotate myself and return
-                                Debug.Log("I'm facing left and need to rotate to the right since I'm trying to pull an obstacle");
+                                //Debug.Log("I'm facing left and need to rotate to the right since I'm trying to pull an obstacle");
                                 //rotationState = RotationState.Right;
                                 StartCoroutine(Rotate(rotationState, RotationState.Right, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z )));
                                 moveState = MoveState.Idle;
                                 return;
-                            } else if (environmentManager.HasBlock(yPosition, xPosition - 1))
+                            } 
+                            else if (environmentManager.HasBlock(yPosition, xPosition - 1))
                             {
                                 // if it's a block, does the spot to my right have a block or obstruction?
                                 if (environmentManager.HasBlock(yPosition, xPosition + 1) || environmentManager.IsOccupied(yPosition, xPosition + 1))
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
-                                    Debug.Log("Trying to pull but there's a block or obstruction in the way!");
+                                    //Debug.Log("Trying to pull but there's a block or obstruction in the way!");
                                     moveState = MoveState.Idle;
                                     return;
-                                } else { 
+                                } 
+                                else 
+                                { 
                                     // if not, move myself to the right and move the block to my current position
-                                    Debug.Log("Pulling to the right!");
+                                    //Debug.Log("Pulling to the right!");
                                     anim.SetTrigger("Pulling");
                                     environmentManager.MoveBlock(yPosition, xPosition - 1, yPosition, xPosition);
                                 }   
                                     
-                            } else { // if there's not a block or obstacle there, just rotate and return
+                            } 
+                            else 
+                            { // if there's not a block or obstacle there, just rotate and return
                                 //rotationState = RotationState.Right;
                                 StartCoroutine(Rotate(rotationState, RotationState.Right, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z)));
                                 moveState = MoveState.Idle;
                                 return;
                             }
-                        } else {
+                        } 
+                        else 
+                        {
                             //rotationState = RotationState.Right;
                             StartCoroutine(Rotate(rotationState, RotationState.Right, new Vector3(transform.position.x - moveIncrement, transform.position.y, transform.position.z)));
                             moveState = MoveState.Idle;
@@ -584,12 +610,13 @@ public class PlayerControl : MonoBehaviour
                         }
                             
                         //if I'm not, then I need to rotate to the right and return
-                    } else // I'm facing right
+                    } 
+                    else // I'm facing right
                     {
                         if (interactButton)
                         {
                             // if I am, we're pushing
-                            Debug.Log("Pushing to the right new");
+                            //Debug.Log("Pushing to the right new");
                             // check environmentmanager the way it is now
                             //if there's a block there, check the next one to the right
                             if (environmentManager.HasBlock(targetY, targetX))
@@ -597,20 +624,25 @@ public class PlayerControl : MonoBehaviour
                                 //if that one has a block or an obstacle, don't do anything
                                 if (environmentManager.HasBlock(targetY, targetX + 1) || environmentManager.IsOccupied(targetY, targetX + 1))
                                 {
-                                    Debug.Log("Block or obstacle found going right, not moving and returning instead...");
+                                    //Debug.Log("Block or obstacle found going right, not moving and returning instead...");
                                     moveState = MoveState.Idle;
                                     return;
-                                } else {// if there's not a block at the next one, we can move but also move the block to the right
+                                } 
+                                else 
+                                {
+                                    // if there's not a block at the next one, we can move but also move the block to the right
                                     // move block to the right
-                                    Debug.Log("Block found going right, should move it right");
+                                    //Debug.Log("Block found going right, should move it right");
                                     environmentManager.MoveBlock(targetY, targetX, targetY, targetX + 1);
                                     anim.SetTrigger("Pushing");
                                     
-                                }
-                                
+                                } 
                             }
-                        } else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX)) {// if it isn't, we only need to check if there's a block or obstacle where we want to go
-                            Debug.Log("Not Moving because there's a block or obstacle in the way");
+                        } 
+                        else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX)) 
+                        {
+                            // if it isn't, we only need to check if there's a block or obstacle where we want to go
+                            //Debug.Log("Not Moving because there's a block or obstacle in the way");
                             moveState = MoveState.Idle;
                             return;
                         }
@@ -631,7 +663,9 @@ public class PlayerControl : MonoBehaviour
                     anim.SetTrigger("Walking");
                     StartCoroutine(Move(targetPos));
 
-                } else {
+                } 
+                else 
+                {
                     moveState = MoveState.Idle;
                 }// if it's occupied,  dont do anything
                                 
@@ -648,13 +682,13 @@ public class PlayerControl : MonoBehaviour
                         case 0:
                         {
                             anim.SetTrigger("IdleBeardStroke");
-                            Debug.Log("Idle beard");
+                            //Debug.Log("Idle beard");
                             break;
                         }
                         case 1:
                         {
                             anim.SetTrigger("IdleYawn");
-                            Debug.Log("Idle yawn");
+                            //Debug.Log("Idle yawn");
                             break;
                         }
                         default:
@@ -669,7 +703,8 @@ public class PlayerControl : MonoBehaviour
 
     ////////////////////////////////////////////////////
 
-    IEnumerator Move(Vector3 targetPos){
+    IEnumerator Move(Vector3 targetPos)
+    {
         yield return new WaitForSeconds(0.4f);
         while ((targetPos - transform.position).sqrMagnitude > 0.000001f)
         {
@@ -685,7 +720,8 @@ public class PlayerControl : MonoBehaviour
 
     ////////////////////////////////////////////////////
 
-    IEnumerator Rotate(RotationState oldState, RotationState newState, Vector3 target){
+    IEnumerator Rotate(RotationState oldState, RotationState newState, Vector3 target)
+    {
         isRotating = true;
         Vector3 targetDirection = new Vector3(0,0,0);
         targetDirection = transform.position  - target;

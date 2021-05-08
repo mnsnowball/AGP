@@ -5,11 +5,14 @@ using UnityEngine;
 public class BlockReader : MonoBehaviour
 {
     public BlockSpace[] spaces;
-    public int numberOfSpaces;
-    public Client theClient;
+    
     public List<Direction> jumpDirections;
-    private void Start() {
-        
+
+    private Client theClient;
+
+    private void Start() 
+    {
+        theClient = GameObject.FindObjectOfType<Client>();
     }
 
     public void Play(){

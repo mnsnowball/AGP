@@ -56,6 +56,12 @@ public class LevelSelection : MonoBehaviour
         anim.SetBool("isHovering", false);
         // disable particles
         emission.enabled = false;
+        if (!XMLManager.ins.unlockedLevels.isUnlocked[levelIndex])
+        {
+            // if the level that I am associated with has not been unlocked, disable myself
+            //Debug.Log("Level at index " + levelIndex + " has not been unlocked");
+            this.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
