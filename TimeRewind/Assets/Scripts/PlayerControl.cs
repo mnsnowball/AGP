@@ -34,20 +34,30 @@ public class PlayerControl : MonoBehaviour
     [Header("Interactivity Settings")]
     public KeyCode interactKey;
     public KeyCode castKey = KeyCode.F;
+    public KeyCode jumpCastKey = KeyCode.R;
     public bool castingEnabled;
+    public bool jumpCastEnabled;
     bool canCast = true;
+    bool canJumpCast = false;
     bool isCastingJump = false;
     DirectionBlock jumpHolder;
+    JumpTrailRenderer jumpRend;
+    GameObject launchSource;
 
     ////////////////////////////////////////////////////
 
     // Start is called before the first frame update
     void Start()
     {
-       xPosition = startingXPos;
-       yPosition = startingYPos;
-       moveState = MoveState.Idle; 
-       isRotating = false;
+        xPosition = startingXPos;
+        yPosition = startingYPos;
+        moveState = MoveState.Idle; 
+        isRotating = false;
+        launchSource = GameObject.FindWithTag("LaunchSource");
+        if (launchSource != null)
+        {
+            launchSource.GetComponent<LineRenderer>().enabled = false;
+        }
     }
 
     ////////////////////////////////////////////////////
@@ -63,109 +73,147 @@ public class PlayerControl : MonoBehaviour
 
     void HandleCasting()
     {
-        
+        DirectionBlock theBlock = GetCurrentFacingBlock();
         if (Input.GetKeyUp(castKey))
         {
             canCast = true;
         }
+
+        if (Input.GetKeyUp(jumpCastKey))
+        {
+            canJumpCast = true;
+        }
         if (Input.GetKey(castKey) && canCast && castingEnabled)
         {
-            DirectionBlock theBlock = null;
+            // handle iteration spellcastingg
             canCast = false;
-            switch (rotationState)
+            
+            if (theBlock != null)
             {
-                case (RotationState.Up): 
-                { 
+                // it's not a jump block and I'm not casting, so just add iterations
+                theBlock.AddIterations();
+                anim.SetTrigger("Cast");           
+            }
+        }
+
+        // handle jump casting
+        if (Input.GetKeyDown(jumpCastKey) && canJumpCast && jumpCastEnabled)
+        {
+            canJumpCast = false;
+            
+            // casting on a jump block
+            if (theBlock.direction == Direction.jump)
+            {
+                jumpRend = theBlock.GetComponentInChildren<JumpTrailRenderer>();
+                if (!isCastingJump)
+                {
+                    // initiate the cast
+                    Debug.Log("Initiating jump cast");
+                    isCastingJump = true;
+                    jumpHolder = theBlock;
+
+                    if (theBlock.hasJumpTo)
+                    {
+                        theBlock.RemoveJumpTo();
+                    }
+                    // enable line between staff and block
+                    if (jumpRend != null)
+                    {
+                        launchSource.GetComponent<LineRenderer>().enabled = true;
+                        jumpRend.enabled = true;
+                        jumpRend.endPosition = GameObject.FindWithTag("StaffTip").transform;
+                    }
+                    
+                }
+                else
+                {
+                    // cancel the cast
+                    Debug.Log("Cancelling jump cast");
+                    jumpHolder.RemoveJumpTo();
+                    isCastingJump = false;
+                    jumpHolder = null;
+                    // disable line between staff and block
+                    if (jumpRend != null)
+                    {
+                        launchSource.GetComponent<LineRenderer>().enabled = false;
+                        jumpRend.endPosition = GameObject.FindWithTag("StaffTip").transform;
+                        jumpRend.enabled = false;
+                    }
+                    
+                }
+            }
+            else if (isCastingJump)
+            {
+                // if it's not a jump block but I'm casting, make it a jump to
+                Debug.Log("Concluding/Setting jump cast");
+                theBlock.isJumpTo = true;
+                jumpHolder.SetJumpTo(theBlock);
+                isCastingJump = false;
+                if (jumpRend != null)
+                {
+                    jumpRend.endPosition = theBlock.gameObject.transform;
+                }
+                // give the jump block a reference to the direction block
+                // set the endPosition of the jumpTrailRenderer to theBlock
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////
+
+    // returns a reference to the block that the player is facing
+    // returns null if there is no block in that space
+    DirectionBlock GetCurrentFacingBlock() 
+    {
+        switch (rotationState)
+        {
+            case (RotationState.Up):
+                {
                     // check the block above me
                     // if there is a block above me, increase its number of iterations
                     if (environmentManager.HasBlock(yPosition - 1, xPosition))
                     {
-                        theBlock = environmentManager.GetBlock(yPosition - 1, xPosition);
+                        return environmentManager.GetBlock(yPosition - 1, xPosition);
                     }
                     break;
                 }
 
-                case (RotationState.Down):
-                { 
+            case (RotationState.Down):
+                {
                     // if there is a block below me, increase its number of iterations
                     if (environmentManager.HasBlock(yPosition + 1, xPosition))
                     {
-                        theBlock = environmentManager.GetBlock(yPosition + 1, xPosition);
+                        return environmentManager.GetBlock(yPosition + 1, xPosition);
                     }
                     break;
                 }
 
-                case(RotationState.Left):
-                { 
+            case (RotationState.Left):
+                {
                     // if there is a block above me, increase its number of iterations
                     if (environmentManager.HasBlock(yPosition, xPosition - 1))
                     {
-                        theBlock = environmentManager.GetBlock(yPosition, xPosition - 1);
+                        return environmentManager.GetBlock(yPosition, xPosition - 1);
                     }
-                break;
-                }
-
-                case(RotationState.Right):
-                { 
-                    if (environmentManager.HasBlock(yPosition, xPosition + 1))
-                    {
-                        theBlock = environmentManager.GetBlock(yPosition, xPosition + 1);
-                    }
-                break;
-                }
-
-                default:
-                { 
                     break;
                 }
-            }
-            if (theBlock != null)
-            {
-                // casting on a jump block
-                if (theBlock.direction == Direction.jump) 
-                {
-                    if (!isCastingJump) 
-                    {
-                        // initiate the cast
-                        Debug.Log("Initiating jump cast");
-                        isCastingJump = true;
-                        jumpHolder = theBlock;
 
-                        if (theBlock.hasJumpTo)
-                        {
-                            theBlock.RemoveJumpTo();
-                        }
-                        // enable line between staff and block
-                    } 
-                    else 
+            case (RotationState.Right):
+                {
+                    if (environmentManager.HasBlock(yPosition, xPosition + 1))
                     {
-                        // cancel the cast
-                        Debug.Log("Cancelling jump cast");
-                        jumpHolder.RemoveJumpTo();
-                        isCastingJump = false;
-                        jumpHolder = null;
-                        // disable line between staff and block
+                        return environmentManager.GetBlock(yPosition, xPosition + 1);
                     }
-                } 
-                else if (isCastingJump) 
-                {
-                    // if it's not a jump block but I'm casting, make it a jump to
-                    Debug.Log("Concluding/Setting jump cast");
-                    theBlock.isJumpTo = true;
-                    jumpHolder.SetJumpTo(theBlock);
-                    isCastingJump = false;
-                    // give the jump block a reference to the direction block
-                    // set the endPosition of the jumpTrailRenderer to theBlock
-                } 
-                else
-                {
-                    // it's not a jump block and I'm not casting, so just add iterations
-                    theBlock.AddIterations();
-                    anim.SetTrigger("Cast");
+                    break;
                 }
-                            
-            }
+
+            default:
+                {
+                    break;
+                }
         }
+
+        return null;
     }
 
     ////////////////////////////////////////////////////

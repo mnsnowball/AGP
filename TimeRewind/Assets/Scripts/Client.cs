@@ -27,7 +27,7 @@ public class Client : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isMoving && directions.Count > 0)
+        if (!isMoving && directions.Count > 0 && !GameManager.instance.isLevelComplete)
         {
             ReadDirection(directions.Dequeue());
         }

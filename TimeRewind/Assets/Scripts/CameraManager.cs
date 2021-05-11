@@ -95,7 +95,7 @@ public class CameraManager : MonoBehaviour
         previousMode = mode;
         mode = CameraMode.View;
 
-        //sceneCam.SetActive(true);
+        sceneCam.SetActive(true);
         sinclairCam.SetActive(false);
         pauseCam.SetActive(false);
         mode = CameraMode.View;

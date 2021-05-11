@@ -130,6 +130,7 @@ public class GameManager : MonoBehaviour
         if (thisLevelIndex < (XMLManager.ins.unlockedLevels.isUnlocked.Count - 2))
         {
             XMLManager.ins.unlockedLevels.isUnlocked[thisLevelIndex + 1] = true;
+            XMLManager.ins.SaveUnlockedLevels();
         }
        
     }

@@ -29,12 +29,6 @@ public class EnvironmentManager : MonoBehaviour
         blockCells = blocks.GetCells();
         clientCells = clientEnv.GetCells();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-
-    }
 
     // checks if a space is occupied and returns the result
     public bool IsOccupied(int x, int y) {
@@ -47,7 +41,7 @@ public class EnvironmentManager : MonoBehaviour
     }
 
     public bool HasClientObstacle(int x, int y) {
-        //Debug.Log("Getting client at [" + x + ", " + y + "]");
+        Debug.Log("Getting client at [" + x + ", " + y + "]");
         return clientCells[x, y];
     }
 
@@ -105,7 +99,8 @@ public class EnvironmentManager : MonoBehaviour
                     SetBlock(targetY, targetX, true);
                 }
 
-            } else if (currentX != targetX) // moving vertically
+            } 
+            else if (currentX != targetX) // moving vertically
             {
                 // if targetX is greater, move to the right
                 if (targetX > currentX)
@@ -118,7 +113,8 @@ public class EnvironmentManager : MonoBehaviour
                     SetBlock(currentY, currentX, false);
                     //blockCells[targetY, targetX] = true;
                     SetBlock(targetY, targetX, true);
-                } else // if it's less, move to the left
+                } 
+                else // if it's less, move to the left
                 {
                     toMove.MoveToken(new Vector3(toMove.gameObject.transform.position.x - moveIncrement, toMove.gameObject.transform.position.y, toMove.gameObject.transform.position.z));
                     // fix indices
@@ -129,7 +125,8 @@ public class EnvironmentManager : MonoBehaviour
                     //blockCells[targetY, targetX] = true;
                     SetBlock(targetY, targetX, true);
                 }
-            } else // else debug.Error because we shouldn't get here
+            } 
+            else // else debug.Error because we shouldn't get here
             {
                 Debug.LogError("currentY and currentX = targetY and targetX, this function should not have been called");
             }
