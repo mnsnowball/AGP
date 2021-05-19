@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 
 public enum SoundType{SFX, Music}
 [System.Serializable]
-public class Sound {
+public class Sound 
+{
     public string name;
     public AudioManager manager;
     public SoundType type;
@@ -99,7 +100,8 @@ public class AudioManager : MonoBehaviour
 
         
 
-        foreach(Sound s in sounds){
+        foreach(Sound s in sounds)
+        {
             GameObject _go = new GameObject("Sound_" + s.name);
             _go.transform.SetParent(this.transform);
             s.SetSource(_go.AddComponent<AudioSource>());
@@ -119,7 +121,8 @@ public class AudioManager : MonoBehaviour
             s.source.loop = s.loop;
         }
 
-        foreach(Sound s in dialogueSounds){
+        foreach(Sound s in dialogueSounds)
+        {
             GameObject _go = new GameObject("Sound_" + s.name);
             s.SetSource(_go.AddComponent<AudioSource>());
             //Debug.Log(s.source);
@@ -142,9 +145,14 @@ public class AudioManager : MonoBehaviour
             PlaySound("Menu_BG");
         }
 
-        if (SceneManager.GetActiveScene().buildIndex > 1)
+        if (SceneManager.GetActiveScene().buildIndex > 1 && SceneManager.GetActiveScene().buildIndex < 12)
         {
             PlaySound("Background_Ambience");
+        }
+
+        if (SceneManager.GetActiveScene().buildIndex > 11)
+        {
+            PlaySound("Credits");
         }
     }
 

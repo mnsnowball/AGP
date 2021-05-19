@@ -15,8 +15,10 @@ public class TutorialManager : MonoBehaviour
     public bool isTalking = false;
     public bool canProceed = false;
 
-    private void Start() {
+    private void Start() 
+    {
         dm = FindObjectOfType<DialogueManager>();
+        em = EnvironmentManager.instance;
         activeDialogue = tutorials[0];
         TriggerDialogue();
     }
@@ -51,7 +53,7 @@ public class TutorialManager : MonoBehaviour
             {
                 case(0):
                 break;
-                case(1):
+                case(2):
                 RunChecksLevelOne();
                 break;
                 default:
@@ -60,19 +62,22 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    public void StopTalking(){
+    public void StopTalking()
+    {
         GameManager.instance.StartPlayerMoving();
         isTalking = false;
     }
 
-    IEnumerator IncrementAfterTime(float toWait){
+    IEnumerator IncrementAfterTime(float toWait)
+    {
         actionIndex++;
         activeDialogue = tutorials[actionIndex];
         yield return new WaitForSeconds(toWait);
         TriggerDialogue();
     }
 
-    public void RunChecksLevelOne(){
+    public void RunChecksLevelOne()
+    {
         switch (actionIndex)
         {
             case(0):

@@ -16,14 +16,12 @@ public class PlayerControl : MonoBehaviour
     public MoveState moveState;
     public float moveIncrement = 1f;
     bool canMove = true;
-    
-    private bool isMoving;
     private bool isRotating;
     private Vector3 input;
     private bool interactButton;
 
     [Header("Environment Settings")]
-    public EnvironmentManager environmentManager; // assumes the player starts at [1,1] in the array
+    public EnvironmentManager environmentManager;
     public int startingXPos = 1;
     public int startingYPos = 1;
     int xPosition;
@@ -70,30 +68,34 @@ public class PlayerControl : MonoBehaviour
     }
 
     ////////////////////////////////////////////////////
-
+    // handles casting and jump casting
     void HandleCasting()
     {
         DirectionBlock theBlock = GetCurrentFacingBlock();
+        if (theBlock == null)
+        {
+            return;
+        }
+
         if (Input.GetKeyUp(castKey))
         {
+            // input reading will happen once per key press
             canCast = true;
         }
 
         if (Input.GetKeyUp(jumpCastKey))
         {
+            // input reading will happen once per key press
             canJumpCast = true;
         }
+
         if (Input.GetKey(castKey) && canCast && castingEnabled)
         {
             // handle iteration spellcastingg
             canCast = false;
-            
-            if (theBlock != null)
-            {
-                // it's not a jump block and I'm not casting, so just add iterations
-                theBlock.AddIterations();
-                anim.SetTrigger("Cast");           
-            }
+            // it's not a jump block and I'm not casting, so just add iterations
+            theBlock.AddIterations();
+            anim.SetTrigger("Cast");           
         }
 
         // handle jump casting
@@ -116,6 +118,7 @@ public class PlayerControl : MonoBehaviour
                     {
                         theBlock.RemoveJumpTo();
                     }
+
                     // enable line between staff and block
                     if (jumpRend != null)
                     {
@@ -147,14 +150,16 @@ public class PlayerControl : MonoBehaviour
                 // if it's not a jump block but I'm casting, make it a jump to
                 Debug.Log("Concluding/Setting jump cast");
                 theBlock.isJumpTo = true;
+                // give the jump block a reference to the direction block
                 jumpHolder.SetJumpTo(theBlock);
                 isCastingJump = false;
                 if (jumpRend != null)
                 {
+                    // set the endPosition of the jumpTrailRenderer to theBlock
                     jumpRend.endPosition = theBlock.gameObject.transform;
                 }
-                // give the jump block a reference to the direction block
-                // set the endPosition of the jumpTrailRenderer to theBlock
+                
+                
             }
         }
     }
@@ -217,7 +222,7 @@ public class PlayerControl : MonoBehaviour
     }
 
     ////////////////////////////////////////////////////
-    
+    // handles player movement and rotation based on input
     void HandleMovement()
     {
         if (moveState == MoveState.Idle && !isRotating && canMove)
@@ -301,7 +306,7 @@ public class PlayerControl : MonoBehaviour
                             else if (environmentManager.HasBlock(yPosition + 1, xPosition))
                             {
                                 // if it's a block, does the spot under me have a block or obstruction?
-                                if (environmentManager.HasBlock(yPosition - 1, xPosition) || environmentManager.IsOccupied(yPosition - 1, xPosition))
+                                if (HasBlockOrObstacle(yPosition - 1, xPosition))
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
                                     //Debug.Log("Trying to pull up but there's a block or obstruction in the way!");
@@ -347,7 +352,7 @@ public class PlayerControl : MonoBehaviour
                             if (environmentManager.HasBlock(targetY, targetX))
                             {
                                 //if that one has a block or an obstacle, don't do anything
-                                if (environmentManager.HasBlock(targetY - 1, targetX) || environmentManager.IsOccupied(targetY - 1, targetX)) 
+                                if (HasBlockOrObstacle(targetY - 1, targetX)) 
                                 {
                                     //Debug.Log("Block or obstacle found up, not moving and returning instead...");
                                     moveState = MoveState.Idle;
@@ -367,7 +372,7 @@ public class PlayerControl : MonoBehaviour
                                 
                             }
                         } 
-                        else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX)) 
+                        else if (HasBlockOrObstacle(targetY, targetX)) 
                         {
                             // if it isn't, we only need to check if there's a block or obstacle where we want to go
                             //Debug.Log("Not Moving up because there's a block or obstacle in the way");
@@ -411,7 +416,7 @@ public class PlayerControl : MonoBehaviour
                             else if (environmentManager.HasBlock(yPosition - 1, xPosition))
                             {
                                 // if it's a block, does the spot under me have a block or obstruction?
-                                if (environmentManager.HasBlock(yPosition + 1, xPosition) || environmentManager.IsOccupied(yPosition + 1, xPosition)) // is block occupied function
+                                if (HasBlockOrObstacle(yPosition + 1, xPosition)) // is block occupied function
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
                                     //Debug.Log("Trying to pull but there's a block or obstruction in the way!");
@@ -456,7 +461,7 @@ public class PlayerControl : MonoBehaviour
                             if (environmentManager.HasBlock(targetY, targetX))
                             {
                                 //if that one has a block or an obstacle, don't do anything
-                                if (environmentManager.HasBlock(targetY + 1, targetX) || environmentManager.IsOccupied(targetY + 1, targetX))
+                                if (HasBlockOrObstacle(targetY + 1, targetX))
                                 {
                                     //Debug.Log("Block or obstacle found down, not moving and returning instead...");
                                     moveState = MoveState.Idle;
@@ -475,7 +480,7 @@ public class PlayerControl : MonoBehaviour
 
                             }
                         }
-                        else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX))
+                        else if (HasBlockOrObstacle(targetY, targetX))
                         {// if it isn't, we only need to check if there's a block or obstacle where we want to go
                             //Debug.Log("Not Moving down because there's a block or obstacle in the way");
                             moveState = MoveState.Idle;
@@ -518,7 +523,7 @@ public class PlayerControl : MonoBehaviour
                             {
                                 // if it's a block, does the spot to my left have a block or obstruction?
                                 // checking to see if there's room for me to move
-                                if (environmentManager.HasBlock(yPosition, xPosition - 1) || environmentManager.IsOccupied(yPosition, xPosition - 1))
+                                if (HasBlockOrObstacle(yPosition, xPosition - 1))
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
                                     //Debug.Log("Trying to pull but there's a block or obstruction in the way!");
@@ -563,7 +568,7 @@ public class PlayerControl : MonoBehaviour
                             if (environmentManager.HasBlock(targetY, targetX))
                             {
                                 //if that one has a block or an obstacle, don't do anything
-                                if (environmentManager.HasBlock(targetY, targetX - 1) || environmentManager.IsOccupied(targetY, targetX - 1))
+                                if (HasBlockOrObstacle(targetY, targetX - 1))
                                 {
                                     //Debug.Log("Block or obstacle found going right, not moving and returning instead...");
                                     moveState = MoveState.Idle;
@@ -582,7 +587,7 @@ public class PlayerControl : MonoBehaviour
                                 } 
                             }
                         } 
-                        else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX)) 
+                        else if (HasBlockOrObstacle(targetY, targetX)) 
                         {
                             // if it isn't, we only need to check if there's a block or obstacle where we want to go
                             //Debug.Log("Not Moving left because there's a block or obstacle in the way");
@@ -625,7 +630,7 @@ public class PlayerControl : MonoBehaviour
                             else if (environmentManager.HasBlock(yPosition, xPosition - 1))
                             {
                                 // if it's a block, does the spot to my right have a block or obstruction?
-                                if (environmentManager.HasBlock(yPosition, xPosition + 1) || environmentManager.IsOccupied(yPosition, xPosition + 1))
+                                if (HasBlockOrObstacle(yPosition, xPosition + 1))
                                 {
                                     // if so, indicate to the player that I can't pull in this direction with sound and animation
                                     //Debug.Log("Trying to pull but there's a block or obstruction in the way!");
@@ -670,7 +675,7 @@ public class PlayerControl : MonoBehaviour
                             if (environmentManager.HasBlock(targetY, targetX))
                             {
                                 //if that one has a block or an obstacle, don't do anything
-                                if (environmentManager.HasBlock(targetY, targetX + 1) || environmentManager.IsOccupied(targetY, targetX + 1))
+                                if (HasBlockOrObstacle(targetY, targetX + 1))
                                 {
                                     //Debug.Log("Block or obstacle found going right, not moving and returning instead...");
                                     moveState = MoveState.Idle;
@@ -687,7 +692,7 @@ public class PlayerControl : MonoBehaviour
                                 } 
                             }
                         } 
-                        else if (environmentManager.HasBlock(targetY, targetX) || environmentManager.IsOccupied(targetY, targetX)) 
+                        else if (HasBlockOrObstacle(targetY, targetX)) 
                         {
                             // if it isn't, we only need to check if there's a block or obstacle where we want to go
                             //Debug.Log("Not Moving because there's a block or obstacle in the way");
@@ -720,10 +725,14 @@ public class PlayerControl : MonoBehaviour
             }
             else
             {
+                // handle idle animation timers
                 idleTime += Time.deltaTime;
                 if (idleTime >= idleAnimThreshold)
                 {
                     idleTime = 0f;
+
+                    // random.range is exclusive of second parameter
+                    // will only give either 0 or 1
                     int randomNum = Random.Range(0, 2);
                     switch (randomNum)
                     {
@@ -876,6 +885,12 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    ////////////////////////////////////////////////////
+
+    bool HasBlockOrObstacle(int yIndex, int xIndex)
+    {
+        return (environmentManager.HasBlock(yIndex, xIndex) || environmentManager.IsOccupied(yIndex, xIndex));
+    }
     ////////////////////////////////////////////////////
 
     public void StopMoving()

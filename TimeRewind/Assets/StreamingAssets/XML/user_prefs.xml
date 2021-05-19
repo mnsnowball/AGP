@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <UserPrefs xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <masterVolume>1</masterVolume>
-  <sfxVolume>0.7369014</sfxVolume>
-  <backgroundVolume>0.750089347</backgroundVolume>
+  <sfxVolume>0.7548736</sfxVolume>
+  <backgroundVolume>0.769592</backgroundVolume>
   <enabledBackgroundMovement>true</enabledBackgroundMovement>
   <windowedMode>true</windowedMode>
-  <contrast>13.5</contrast>
+  <contrast>28.101347</contrast>
   <invertCameraX>false</invertCameraX>
   <invertCameraY>false</invertCameraY>
 </UserPrefs>

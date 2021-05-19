@@ -1,12 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LevelSelection : MonoBehaviour
 {
     // this class will go on the level select screen books to turn them into buttons
-
-    bool canClickMe = false;
     bool isLoading = false;
     public Outline outline;
     public LevelLoader loader;
@@ -18,7 +14,6 @@ public class LevelSelection : MonoBehaviour
     {
         if (!isLoading)
         {
-            canClickMe = true;
             outline.enabled = true;
             anim.SetBool("isHovering", true);
             // enable particles
@@ -30,7 +25,6 @@ public class LevelSelection : MonoBehaviour
     {
         if (!isLoading)
         {
-            canClickMe = false;
             outline.enabled = false;
             anim.SetBool("isHovering", false);
             // disable particles
@@ -51,7 +45,6 @@ public class LevelSelection : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         emission = particles.emission;
-        canClickMe = false;
         outline.enabled = false;
         anim.SetBool("isHovering", false);
         // disable particles
@@ -62,10 +55,5 @@ public class LevelSelection : MonoBehaviour
             //Debug.Log("Level at index " + levelIndex + " has not been unlocked");
             this.gameObject.SetActive(false);
         }
-    }
-
-    private void Update()
-    {
-        
     }
 }
